@@ -139,7 +139,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="algorithm_1.cpp" />
+    <ClCompile Include="environment.cpp" />
+    <ClCompile Include="instanceFile.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="point.cpp" />
+    <ClCompile Include="route.cpp" />
     <ClCompile Include="Vehicle Routing Problem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="algorithm_1.h" />
+    <ClInclude Include="environment.h" />
+    <ClInclude Include="instanceFile.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="point.h" />
+    <ClInclude Include="route.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
