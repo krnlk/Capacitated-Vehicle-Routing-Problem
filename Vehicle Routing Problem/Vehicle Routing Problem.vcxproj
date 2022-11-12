@@ -145,6 +145,7 @@
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="route.cpp" />
+    <ClCompile Include="specimen.cpp" />
     <ClCompile Include="Vehicle Routing Problem.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="menu.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="route.h" />
+    <ClInclude Include="specimen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,13 +1,20 @@
 #pragma once
+#include <string>
+
 #include "point.h"
 
+// This class represents a single instance file, along with all its data.
 class instanceFile
 {
-	int bestKnownSolution;
+public:
+	int optimalValue;
 	int maxCapacity;
 	int dimension;
-	Point points[];
-	void loadInstanceData();
+	point* pointsArray;
+
+	~instanceFile();
+	void loadInstanceData(std::string filename);
 	void saveResultsToFile();
+	void printInstanceData();
 };
 
