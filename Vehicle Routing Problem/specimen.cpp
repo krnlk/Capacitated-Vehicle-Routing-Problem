@@ -8,6 +8,7 @@ specimen::specimen() {
 }
 
 specimen::~specimen() {
+    delete[] pointOrder;
 }
 
 // Copy constructor for generating offspring.
@@ -21,102 +22,82 @@ int specimen::getTotalCost() {
     return totalCost;
 }
 
-int specimen::getNumberOfSubroutes() {
-    return subroutes.size();
+// Calculate the total cost of the specimen by travelling from point to point until a capacity limit is reached
+// and then returning to depot. Repeat the process until there are no more points left.
+int specimen::calculateTotalCost(instanceFile instanceFile) {
+    totalCost = 0;
+    int currentCapacity = 0;
+
+    for (int i = 1; i < instanceFile.dimension; ) {
+        if (currentCapacity + instanceFile.pointsArray[pointOrder[i]].getDemand() <= instanceFile.maxCapacity) { // If there's capacity for the next point.
+            if (currentCapacity == 0) totalCost += instanceFile.distanceBetweenPoints[0][pointOrder[i]]; // Get distance between depot and first point on a new subroute.
+            else totalCost += instanceFile.distanceBetweenPoints[pointOrder[i - 1]][pointOrder[i]]; // Get distance between previous point and current point in a subroute.
+
+            currentCapacity += instanceFile.pointsArray[pointOrder[i]].getDemand(); // Increase capacity for current point.
+            i++;
+        }
+        else { // If there's no capacity for next point.
+            totalCost += instanceFile.distanceBetweenPoints[i - 1][pointOrder[0]]; // Go back from previous point to the depot and finish that subroute.
+            currentCapacity = 0; // Reset capacity for the next subroute.
+        }
+    }
+    
+    if (currentCapacity == 0) { // Connect the last point in specimen with a depot if it hasn't been connected already.
+        totalCost += instanceFile.distanceBetweenPoints[instanceFile.dimension - 1][pointOrder[0]];
+    }
+
+    return totalCost;
 }
 
+/*
 int specimen::getNumberOfPointsInASubroute(int subrouteIndex)
 {
     std::list<route>::iterator it = subroutes.begin();
     advance(it, subrouteIndex);
     return it->getSize();
 }
+*/
 
+void specimen::setPointOrder(int* pointOrder) {
+    this->pointOrder = pointOrder;
+}
+
+int specimen::getPoint(int index)
+{
+    return pointOrder[index];
+}
+
+/*
 route specimen::getSubroute(int subrouteIndex)
 {
     std::list<route>::iterator it = subroutes.begin();
     advance(it, subrouteIndex);
     return *it;
 }
+*/
 
 // Generates a random route by shuffling the order of points around.
 void specimen::generateRandomRoute(instanceFile instanceFile, int* pointOrder) {
-    unsigned rnd = 0; // Creates a random formula for shuffling.
+    unsigned rnd = 0; // Creates a random formula for shuffling. //TODO maybe move it to calling function from specimen.cpp, since there's a new seed being initialised each time?
 
     std::shuffle(pointOrder + 1, pointOrder + instanceFile.dimension, std::default_random_engine(rnd)); // Shuffle the order of points on a route (don't shuffle depot).
-    totalCost = calculateTotalCost(instanceFile, pointOrder);
-}
+    
+    this->pointOrder = new int[instanceFile.dimension];
 
-// Calculate the total cost of the specimen by travelling from point to point until a capacity limit is reached
-// and then returning to depot. Repeat the process until there are no more points left.
-int specimen::calculateTotalCost(instanceFile instanceFile, int* pointOrder) {
-    totalCost = 0;
-    int currentSubrouteCapacity = 0;
-    route subroute;
-
-    for (int i = 1; i < instanceFile.dimension; ) { // Start from i = 1 to ignore the depot.
-        subroute = createANewSubroute(instanceFile, i, pointOrder);
-        subroutes.push_back(subroute); // Add a new subroute.
-        totalCost += subroute.getCost(); //think about standardizing getcost and iterating the index
+    for (int i = 0; i < instanceFile.dimension; i++) {
+        this->pointOrder[i] = pointOrder[i];
     }
-
-    return totalCost;
+    
+    totalCost = calculateTotalCost(instanceFile); //TODO maybe remove totalCost = part
 }
 
-
+/*
 route specimen::createANewSubroute(instanceFile instanceFile, int& currentPointIndex, int* pointOrder) {
     route newSubroute;
     newSubroute.generateRoute(instanceFile, currentPointIndex, pointOrder);
     return newSubroute;
 }
-
-// Remove points from a subroute.
-void specimen::removePoints(instanceFile instanceFile, int amountOfPointsLeftToDelete, int* deletedPoints)
-{
-    std::list<route>::iterator routesIt;
-
-    for (routesIt = subroutes.begin(); routesIt != subroutes.end() && amountOfPointsLeftToDelete > 0; ++routesIt) {
-        totalCost -= routesIt->removePoints(instanceFile, amountOfPointsLeftToDelete, deletedPoints); // Remove a point and change total cost of the specimen.
-    }
-}
-
-// Add missing points to a specimen.
-void specimen::addPoint(instanceFile instanceFile, int amountOfPointsLeftToAdd, int* addedPoints)
-{
-    std::list<route>::iterator routesIt;
-
-    std::list<route>::iterator bestInsertionIt; // Best insertion's route.
-    std::pair<std::list<int>::iterator, int> bestInsertion; // Best insertion's iterator & value.
-    std::pair<std::list<int>::iterator, int> newInsertion;
-
-    for (int i = 0; i < amountOfPointsLeftToAdd; i++) { // For every point that needs to be added.
-        bestInsertion = make_pair(subroutes.begin()->getIterator(), INT_MAX); // New point being added - reset best insertion.
-
-        for (routesIt = subroutes.begin(); routesIt != subroutes.end() && amountOfPointsLeftToAdd > 0; ++routesIt) { // Find the best place to insert a point.
-            if (routesIt->getCapacity() + instanceFile.pointsArray[addedPoints[i]].getDemand() <= instanceFile.maxCapacity) // Only check the subroute if it has the capacity to fit the point.
-                newInsertion = routesIt->findPointInsertionIndex(instanceFile, amountOfPointsLeftToAdd, addedPoints[i]);
-            if (newInsertion.second > bestInsertion.second) { // If a better insertion point has been found.
-                bestInsertionIt = routesIt; // Update the route with the best insertion point.
-                bestInsertion = newInsertion; // Update the position and value of the new best insertion spot.
-            }
-        }
-
-        if (bestInsertion.second == INT_MAX) { // If point doesn't fit anywhere, create a new route for it.
-            addNewSubroute(instanceFile, addedPoints[i]);
-        }
-        else { // If the point fits somewhere in the existing subroutes.
-            bestInsertionIt->addPoint(instanceFile, bestInsertion); // Insert a point into the route with the "best" spot.
-        }
-    }
-
-    //TODO probably remove it later
-    /*
-    for (routesIt = subroutes.begin(); routesIt != subroutes.end() && amountOfPointsLeftToAdd > 0; ++routesIt) { //fix the addedpoints0 placeholder
-        if (routesIt->getCapacity() + instanceFile.pointsArray[addedPoints[0]].getDemand() <= instanceFile.maxCapacity) // Only check the subroute if it has the capacity to fit the point.
-            routesIt->addPoints(instanceFile, amountOfPointsLeftToAdd, addedPoints);
-    }
-    */
-}
+*/
 
 /*
 route specimen::calculateSubrouteCost(instanceFile instanceFile, int& currentPointIndex, int* pointOrder) {
@@ -150,6 +131,7 @@ route specimen::calculateSubrouteCost(instanceFile instanceFile, int& currentPoi
 */
 
 // Swap two random elements in a specimen.
+/*
 void specimen::mutateSwap(instanceFile instanceFile) {
     std::list<int>::iterator it1;
     std::list<int>::iterator it2;
@@ -188,6 +170,18 @@ void specimen::mutateSwap(instanceFile instanceFile) {
     it2 = tmp;
 
     // Swap values for routes.
+}
+*/
+
+void specimen::mutateSwap(instanceFile instanceFile) {
+    int index1, index2;
+
+    index1 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the first point. Don't swap first point (depot).
+    index2 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the second point. Don't swap first point (depot).
+
+    while (index1 == index2) index2 = rand() % (instanceFile.dimension - 1) + 1;
+
+    std::swap(pointOrder[index1], pointOrder[index2]);
 }
 
 // Swap two random elements in a specimen.
@@ -233,48 +227,26 @@ void specimen::mutateSwap(instanceFile instanceFile) {
 
 // Swap the order of all elements between two random elements in a specimen (including those two elements).
 void specimen::mutateInvert(instanceFile instanceFile) {
-    /*
-    std::list<int>::iterator it1;
-    std::list<int>::iterator it2;
+    int index1, index2;
 
-    std::list<route>::iterator routesIt1 = subroutes.begin();
-    std::list<route>::iterator routesIt2;
+    index1 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the first point. Don't swap first point (depot).
+    index2 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the second point. Don't swap first point (depot).
 
-    int firstElementIndex = rand() % instanceFile.dimension;
-    int secondElementIndex = rand() % instanceFile.dimension;
+    while (index1 == index2) index2 = rand() % (instanceFile.dimension - 1) + 1;
 
-    while (secondElementIndex == firstElementIndex) secondElementIndex = rand() % instanceFile.dimension; // Ensure that two different points will be swapped.
+    if (index1 > index2) std::swap(index1, index2);
 
-    if (firstElementIndex > secondElementIndex) std::swap(firstElementIndex, secondElementIndex);
-
-    // Find the correct subroutes.
-    while (routesIt1->getSize() <= firstElementIndex) {
-        firstElementIndex -= routesIt1->getSize();
-        secondElementIndex -= routesIt1->getSize();
-
-        routesIt1++;
+    while (index1 < index2) {
+        std::swap(pointOrder[index1], pointOrder[index2]);
+        index1++;
+        index2--;
     }
-
-    it1 = routesIt1->findElement(firstElementIndex);
-
-    while (routesIt2->getSize() <= secondElementIndex) {
-        secondElementIndex -= routesIt2->getSize();
-
-        routesIt2++;
-    }
-
-    it2 = routesIt2->findElement(secondElementIndex);
-
-    // Swap the pointers
-    std::list<int>::iterator tmp = it1;
-    it1 = it2;
-    it2 = tmp;
-    */
 }
 
-
+/*
 void specimen::addNewSubroute(instanceFile instanceFile, int newPoint) {
     route newRoute;
     subroutes.push_back(newRoute);
     totalCost += newRoute.getCost();
 }
+*/

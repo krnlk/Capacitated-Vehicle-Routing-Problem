@@ -2,13 +2,14 @@
 #include <list>
 
 #include "instanceFile.h"
-#include "route.h"
 
 // This class represents a single specimen in a generation.
 class specimen
 {
-	std::list<route> subroutes;
-	int totalCost;
+	int* pointOrder; // An array containing the order of points in this specimen.
+	//int* pointLocation; // An array containing information where each point is located in this particular specimen.
+
+	int totalCost; // Total cost of a specimen.
 
 public:
 	specimen();
@@ -16,16 +17,11 @@ public:
 	~specimen();
 
 	int getTotalCost();
-	int getNumberOfSubroutes();
-	int getNumberOfPointsInASubroute(int subrouteIndex);
-	route getSubroute(int subrouteIndex);
+	int calculateTotalCost(instanceFile instanceFile);
+	void setPointOrder(int* pointOrder);
+	int getPoint(int index);
 	void generateRandomRoute(instanceFile instanceFile, int* pointOrder);
-	int calculateTotalCost(instanceFile instanceFile, int* pointOrder);
-	route createANewSubroute(instanceFile instanceFile, int& currentPointIndex, int* pointOrder);
-	void removePoints(instanceFile instanceFile, int amountOfPointsLeftToDelete, int* deletedPoints);
-	void addPoint(instanceFile instanceFile, int amountOfPointsLeftToAdd, int* addedPoints);
 	void mutateSwap(instanceFile instanceFile);
 	void mutateInvert(instanceFile instanceFile);
-	void addNewSubroute(instanceFile instanceFile, int newPoint);
 };
 

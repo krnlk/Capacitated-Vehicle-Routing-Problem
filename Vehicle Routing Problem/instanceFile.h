@@ -10,11 +10,16 @@ public:
 	int optimalValue;
 	int maxCapacity;
 	int dimension;
+
 	point* pointsArray;
+	int** distanceBetweenPoints;
 
 	~instanceFile();
 	void loadInstanceData(std::string filename);
 	void saveResultsToFile();
 	void printInstanceData();
+
+	void calculateDistancesBetweenPoints();
+	void dealocateDistancesBetweenPoints();
 };
 

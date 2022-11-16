@@ -7,7 +7,6 @@ class point
 	int positionX;
 	int positionY;
 	int demand;
-	bool alreadyVisited;
 
 public: 
 	int getIndex();

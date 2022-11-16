@@ -6,7 +6,7 @@
 
 
 instanceFile::~instanceFile() {
-	delete[] this->pointsArray;
+	//delete[] this->pointsArray;
 }
 
 void instanceFile::loadInstanceData(std::string filename) {
@@ -77,4 +77,24 @@ void instanceFile::printInstanceData() {
 		std::cout << "The point number " << i << " is placed in coordinates (" << pointsArray[i].getPositionX() << ", " << pointsArray[i].getPositionY() 
 			<< "). Its demand is: " << pointsArray[i].getDemand() << std::endl;
 	}
+}
+
+void instanceFile::calculateDistancesBetweenPoints() {
+	distanceBetweenPoints = new int* [dimension];
+
+	for (int i = 0; i < dimension; i++) {
+		distanceBetweenPoints[i] = new int[dimension];
+
+		for (int j = 0; j < dimension; j++) {
+			distanceBetweenPoints[i][j] = pointsArray[i].getDistanceToAnotherPoint(pointsArray[j]);
+		}
+	}
+}
+
+void instanceFile::dealocateDistancesBetweenPoints() {
+	for (int i = 0; i < dimension; i++) {
+		delete[] distanceBetweenPoints[i];
+	}
+
+	delete[] distanceBetweenPoints;
 }
