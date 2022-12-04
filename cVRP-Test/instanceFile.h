@@ -24,8 +24,5 @@ public:
 
 	void calculateDistancesBetweenPoints();
 	void dealocateDistancesBetweenPoints();
-
-	// For testing purposes only.
-	void printDistancesBetweenPoints();
 };
 

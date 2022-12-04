@@ -10,11 +10,8 @@ public:
 
 	std::vector<int> pointOrder; // A vector containing the order of points in this specimen.
 
-	bool obligatoryMutation = false; // 
-	int totalCost; // Total cost of a specimen.
 
-	std::vector<int> pointLocation; // Contains information about index position of each point in the specimen. For example pointLocation[4] = 6 means that point number 4 can be found in pointOrder[6].
-	bool pointLocationSet = false;
+	int totalCost; // Total cost of a specimen.
 
 	specimen();
 	specimen(const specimen& old, instanceFile instanceFile); // Copy constructor
@@ -30,8 +27,5 @@ public:
 	void generateRandomRoute(instanceFile instanceFile, std::vector<int>& pointOrder);
 	void mutateSwap(instanceFile instanceFile);
 	void mutateInvert(instanceFile instanceFile);
-
-	std::vector<int> getPointsOnARoute(instanceFile instanceFile); // For testing only.
-	void setPointLocations(instanceFile instanceFile);
 };
 

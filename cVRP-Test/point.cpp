@@ -1,8 +1,6 @@
+#include "point.h"
 #include <algorithm>
 #include <math.h>
-#include <cmath>
-
-#include "point.h"
 
 int point::getIndex() {
 	return this->index;
@@ -38,7 +36,7 @@ int point::getDistanceToAnotherPoint(point anotherPoint) {
 	double distanceY = pow(std::max(this->positionY, anotherPoint.getPositionY()) - std::min(this->positionY, anotherPoint.getPositionY()), 2);
 
 	double totalDistanceBeforeRound = pow(distanceX + distanceY, 0.5);
-	int totalDistance = std::round(totalDistanceBeforeRound);
+	int totalDistance = totalDistanceBeforeRound;
 
 	return totalDistance;
 }

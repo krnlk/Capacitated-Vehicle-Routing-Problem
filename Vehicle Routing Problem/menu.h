@@ -8,6 +8,7 @@ public:
 	std::string settingsFileName = "settings.ini";
 	std::string initialisationFileName = "experiment.txt";
 	std::string outputFileName = "testResults.txt";
+	std::string generationResultsFile = "generationResults.txt";
 	char userInput;
 	bool exitProgram = false;
 
@@ -16,4 +17,5 @@ public:
 	void startDialogue();
 	void changeInitialisationFileName();
 	void changeOutputFileName();
+	void changeGenerationResultsFileName();
 };

@@ -8,11 +8,13 @@ class environment
 	std::string instanceFileName;
 	int bestKnownRouteCost;
 	int bestFoundRouteCost;
+	double averageBestFoundRouteCost;
 	std::string bestFoundRoutePath;
-	double error;
+	double averageError;
 	long long int time;
+	double bestError;
 
 public:
-	void beginExperiment(std::string experimentFileName, std::string outputFileName);
+	void beginExperiment(std::string experimentFileName, std::string outputFileName, std::string generationResultsFileName);
 };
 

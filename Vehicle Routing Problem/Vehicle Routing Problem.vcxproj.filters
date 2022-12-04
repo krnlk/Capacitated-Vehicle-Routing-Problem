@@ -24,7 +24,7 @@
     <ClCompile Include="environment.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="algorithm_1.cpp">
+    <ClCompile Include="geneticCVRP.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="point.cpp">
@@ -44,7 +44,7 @@
     <ClInclude Include="environment.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="algorithm_1.h">
+    <ClInclude Include="geneticCVRP.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="point.h">

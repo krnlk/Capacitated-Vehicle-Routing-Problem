@@ -26,7 +26,7 @@ void instanceFile::loadInstanceData(std::string filename) {
 			std::getline(instanceFile, textLine);
 			if (textLine.find("Optimal value: ") != -1) {
 				textLine = textLine.substr(textLine.find("Optimal value: ") + 15); // Trim out beginning of the line to get to optimal value;
-				if (textLine.find(")") != -1) textLine = textLine.erase(textLine.find(")"));
+				textLine = textLine.erase(textLine.find(")"));
 				optimalValue = stoi(textLine); // Convert from string to integer.
 			}
 
@@ -59,13 +59,14 @@ void instanceFile::loadInstanceData(std::string filename) {
 				instanceFile >> textNumber1 >> textNumber2;
 				pointsVector[i].setDemand(textNumber2);
 				pointsVector[i].setIndex(i);
+				//std::cout << pointsVector[i].getDemand() << std::endl;
 			}
 			instanceFile.close();
 	}
 	else {
-		std::cout << "Error - couldn't open the instance file " << filename << "." << std::endl;
-		std::cout << "Skipping ahead to the next instance file." << std::endl;
+		std::cout << "Error" << std::endl;
 	}
+	//std::cout << "Instance dimension: " << dimension << std::endl;
 }
 
 void instanceFile::clearInstanceData() {
@@ -109,16 +110,4 @@ void instanceFile::dealocateDistancesBetweenPoints() {
 	}
 
 	delete[] distanceBetweenPoints;
-}
-
-void instanceFile::printDistancesBetweenPoints() {
-	std::cout << std::endl;
-
-	for (int i = 0; i < dimension; i++) {
-		for (int j = 0; j < dimension; j++) {
-			std::cout << distanceBetweenPoints[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
 }

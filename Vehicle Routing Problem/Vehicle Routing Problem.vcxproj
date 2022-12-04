@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="algorithm_1.cpp" />
+    <ClCompile Include="geneticCVRP.cpp" />
     <ClCompile Include="environment.cpp" />
     <ClCompile Include="instanceFile.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -148,7 +148,7 @@
     <ClCompile Include="Vehicle Routing Problem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="algorithm_1.h" />
+    <ClInclude Include="geneticCVRP.h" />
     <ClInclude Include="environment.h" />
     <ClInclude Include="instanceFile.h" />
     <ClInclude Include="menu.h" />

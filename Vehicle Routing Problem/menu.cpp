@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 #include <fstream>
 
 #include "menu.h"
@@ -11,7 +12,7 @@ void menu::loadSettings() {
 
 	settingsFile.open(settingsFileName);
 	if (settingsFile) { // If file exists.
-		settingsFile >> initialisationFileName >> outputFileName;
+		settingsFile >> initialisationFileName >> outputFileName >> generationResultsFile;
 	}
 
 	startDialogue();
@@ -31,14 +32,21 @@ void menu::startDialogue() {
 		std::cout << "(2) Check the program parameters." << std::endl;
 		std::cout << "(3) Check initialisation & output files." << std::endl;
 		std::cout << "(4) Change the initialisation data file." << std::endl;
-		std::cout << "(5) Change output file name." << std::endl;
+		std::cout << "(5) Change test results output file name." << std::endl;
+		std::cout << "(6) Change generation results output file name." << std::endl;
 		std::cout << "(e) Exit the program." << std::endl;
 
-		std::cin >> userInput;
+		std::cout << std::endl << std::endl << std::endl;
+
+		//std::cin >> userInput;
+		userInput = _getch();
 
 		switch (userInput) {
 		case '1':
-			environment.beginExperiment(initialisationFileName, outputFileName);
+			std::cout << "Beginning experiment. Data will be loaded from " << initialisationFileName << " file and saved to files "
+				<< outputFileName << " and " << generationResultsFile << std::endl;
+			environment.beginExperiment(initialisationFileName, outputFileName, generationResultsFile);
+			std::cout << "The experiment has finished." << std::endl;
 			break;
 
 		case '2':
@@ -48,6 +56,7 @@ void menu::startDialogue() {
 		case '3':
 			std::cout << "Currently initialisation data is loaded from a file named " << initialisationFileName << "." << std::endl;
 			std::cout << "Experiment results are currently being saved to a file named " << outputFileName << "." << std::endl;
+			std::cout << "Results for each generation are currently being saved to a file named " << generationResultsFile << "." << std::endl;
 			break;
 
 		case '4':
@@ -58,6 +67,10 @@ void menu::startDialogue() {
 			changeOutputFileName();
 			break;
 
+		case '6':
+			changeGenerationResultsFileName();
+			break;
+
 		case 'e':
 			exitProgram = true;
 			break;
@@ -65,6 +78,8 @@ void menu::startDialogue() {
 		default:
 			break;
 		}
+
+		std::cout << std::endl << std::endl << std::endl;
 	}
 }
 
@@ -84,3 +99,10 @@ void menu::changeOutputFileName()
 	std::cout << "Output file name has been changed to: " << outputFileName << std::endl;
 }
 
+// Changes the name of the generation results file.
+void menu::changeGenerationResultsFileName()
+{
+	std::cout << "What should be the file name of the generation results output file?" << std::endl;
+	std::cin >> generationResultsFile;
+	std::cout << "Generation results output file name has been changed to: " << generationResultsFile << std::endl;
+}
