@@ -2,36 +2,15 @@
 #include <list>
 
 #include "instanceFile.h"
+#include "cVRPSolution.h"
 
-// This class represents a single specimen in a generation.
-class specimen
+// This class represents a single specimen in a generation in genetic algorithm.
+class specimen: public cVRPSolution
 {
 public:
+	bool obligatoryMutation = false; // Used to mark a specimen that was created by directly copying it from the previous generation.
 
-	std::vector<int> pointOrder; // A vector containing the order of points in this specimen.
-
-	bool obligatoryMutation = false; // 
-	int totalCost; // Total cost of a specimen.
-
-	std::vector<int> pointLocation; // Contains information about index position of each point in the specimen. For example pointLocation[4] = 6 means that point number 4 can be found in pointOrder[6].
-	bool pointLocationSet = false;
-
-	specimen();
-	specimen(const specimen& old, instanceFile instanceFile); // Copy constructor
-	~specimen();
-
-	int getTotalCost();
-	int calculateTotalCost(instanceFile instanceFile);
-	void setPointOrder(std::vector<int>& pointOrder);
-
-	void clearPointOrder();
-
-	int getPoint(int index);
-	void generateRandomRoute(instanceFile instanceFile, std::vector<int>& pointOrder);
-	void mutateSwap(instanceFile instanceFile);
-	void mutateInvert(instanceFile instanceFile);
-
-	std::vector<int> getPointsOnARoute(instanceFile instanceFile); // For testing only.
-	void setPointLocations(instanceFile instanceFile);
+	void mutateSwap(instanceFile instanceFile); // Mutation operator - swap.
+	void mutateInvert(instanceFile instanceFile); // Mutation operator - invert.
 };
 

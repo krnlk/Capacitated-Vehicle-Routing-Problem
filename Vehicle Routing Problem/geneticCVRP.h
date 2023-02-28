@@ -25,11 +25,7 @@ class geneticCVRP
 	std::vector<specimen> newGenerationOfSpecimen;
 
 public: 	
-	~geneticCVRP();
-
 	void setAlgorithmParameters(std::ifstream &experimentParametersFile);
-
-	void saveGenerationResults(std::ifstream& experimentResultsFile);
 
 	int getBestFoundSolutionTotalCost();
 
@@ -41,15 +37,12 @@ public:
 
 	void setBestSpecimenInfo(instanceFile instanceFile, int bestSpecimenIndex);
 
-	//bool compareSpecimen(specimen firstSpecimen, specimen secondSpecimen);
-
-	void mainAlgorithmLoop(instanceFile instanceFile, std::ofstream& experimentResultsFile);
-	void analyseNewGeneration(instanceFile instanceFile, int generationNumber, std::ofstream& experimentResultsFile);
+	void mainAlgorithmLoop(instanceFile instanceFile, std::ofstream& experimentResultsFile, int iteration);
+	void analyseNewGeneration(instanceFile instanceFile, int generationNumber, std::ofstream& experimentResultsFile, int iteration);
 
 	void generateInitialSpecimen(instanceFile instanceFile);
 
 	void selectCrossover(instanceFile instanceFile, int offspringIndex, int firstParentIndex, int secondParentIndex);
-	void crossover(instanceFile instanceFile, int offSpringIndex, int firstParentIndex, int secondParentIndex);
 
 	void cycleCrossover(instanceFile instanceFile, int offspringIndex, int firstParentIndex, int secondParentIndex);
 	specimen orderedCrossover(instanceFile instanceFile, int firstParentIndex, int secondParentIndex, int leftCutoff, int rightCutoff);
@@ -61,12 +54,9 @@ public:
 	void mutateInvert(instanceFile instanceFile, int specimenIndex);
 	
 	std::pair<int, int> selection(instanceFile instanceFile);
-
 	std::pair<int, int> randomSelection(instanceFile instanceFile);
 	int rankSelection(instanceFile instanceFile);
-	std::pair<int, int> stochasticUniversalSamplingSelection(instanceFile instanceFile);
 	int tournamentSelection(instanceFile instanceFile);
-	//int rouletteWheelSelection(instanceFile instanceFile);
 	int rouletteWheelSelection(instanceFile instanceFile, int parentIndex, double &totalSpecimenValueSum, double probability);
 
 	void createNewOffspring(instanceFile instanceFile);

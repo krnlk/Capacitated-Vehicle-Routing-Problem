@@ -57,7 +57,7 @@ void instanceFile::loadInstanceData(std::string filename) {
 
 			for (int i = 0; i < dimension; i++) {
 				instanceFile >> textNumber1 >> textNumber2;
-				pointsVector[i].setDemand(textNumber2);
+				pointsVector[i].setWeight(textNumber2);
 				pointsVector[i].setIndex(i);
 			}
 			instanceFile.close();
@@ -72,10 +72,6 @@ void instanceFile::clearInstanceData() {
 	pointsVector.clear();
 }
 
-void instanceFile::saveResultsToFile() {
-
-}
-
 //TODO update
 void instanceFile::printInstanceData() {
 	std::cout << "Optimal value is: " << optimalValue << std::endl;
@@ -83,11 +79,11 @@ void instanceFile::printInstanceData() {
 	std::cout << "This instance files consists of " << dimension << " points." << std::endl;
 
 	std::cout << "The depot is placed in coordinates (" << pointsVector[0].getPositionX() << ", " << pointsVector[0].getPositionY() 
-		<< "). Its demand is: " << pointsVector[0].getDemand() << std::endl << std::endl;
+		<< "). Its demand is: " << pointsVector[0].getWeight() << std::endl << std::endl;
 
 	for (int i = 1; i < dimension; i++) {
 		std::cout << "The point number " << i << " is placed in coordinates (" << pointsVector[i].getPositionX() << ", " << pointsVector[i].getPositionY() 
-			<< "). Its demand is: " << pointsVector[i].getDemand() << std::endl;
+			<< "). Its demand is: " << pointsVector[i].getWeight() << std::endl;
 	}
 }
 
