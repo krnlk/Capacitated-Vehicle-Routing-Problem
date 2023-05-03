@@ -4,12 +4,8 @@
 
 #include "instanceFile.h"
 
-
-instanceFile::~instanceFile() {
-	//delete[] this->pointsArray;
-}
-
-void instanceFile::loadInstanceData(std::string filename) {
+// Load data of an instance file.
+void instanceFile::loadInstanceData(std::string path, std::string filename) {
 	std::ifstream instanceFile;
 	std::string textLine;
 	std::string textWord1, textWord2, textWord3;
@@ -18,7 +14,7 @@ void instanceFile::loadInstanceData(std::string filename) {
 
 	fileName = filename;
 
-	instanceFile.open(filename);
+	instanceFile.open(path + filename);
 
 	if (instanceFile.is_open()) {
 			std::getline(instanceFile, textLine); // Skip unneeded info.
@@ -62,17 +58,19 @@ void instanceFile::loadInstanceData(std::string filename) {
 			}
 			instanceFile.close();
 	}
-	else {
+	else { // If an instance file couldn't be found.
 		std::cout << "Error - couldn't open the instance file " << filename << "." << std::endl;
 		std::cout << "Skipping ahead to the next instance file." << std::endl;
 	}
 }
 
+// Clear information about last read instance file's points.
 void instanceFile::clearInstanceData() {
 	pointsVector.clear();
 }
 
 //TODO update
+// Print information about this instance file.
 void instanceFile::printInstanceData() {
 	std::cout << "Optimal value is: " << optimalValue << std::endl;
 	std::cout << "Maximum capacity per route is: " << maxCapacity << std::endl;
@@ -87,6 +85,7 @@ void instanceFile::printInstanceData() {
 	}
 }
 
+// Calculate distances between any two given points in this file and save them in a dynamic, two-dimensional array.
 void instanceFile::calculateDistancesBetweenPoints() {
 	distanceBetweenPoints = new int* [dimension];
 
@@ -99,6 +98,7 @@ void instanceFile::calculateDistancesBetweenPoints() {
 	}
 }
 
+// Deallocate the memory in two-dimensional array containing distances between any two given points in this file.
 void instanceFile::dealocateDistancesBetweenPoints() {
 	for (int i = 0; i < dimension; i++) {
 		delete[] distanceBetweenPoints[i];
@@ -107,6 +107,8 @@ void instanceFile::dealocateDistancesBetweenPoints() {
 	delete[] distanceBetweenPoints;
 }
 
+// Print the array of distances between any two given points.
+// Testing only.
 void instanceFile::printDistancesBetweenPoints() {
 	std::cout << std::endl;
 

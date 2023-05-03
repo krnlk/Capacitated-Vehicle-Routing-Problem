@@ -5,6 +5,7 @@
 #include "geneticCVRP.h"
 #include "specimen.h"
 
+// 
 void geneticCVRP::setAlgorithmParameters(std::ifstream &experimentFile)
 {
 	std::string textLine;
@@ -35,11 +36,13 @@ void geneticCVRP::setAlgorithmParameters(std::ifstream &experimentFile)
 	std::getline(experimentFile, textLine); // Skip unneeded info.
 }
 
+// Get the cost of the solution with the lowest found cost.
 int geneticCVRP::getBestFoundSolutionTotalCost()
 {
 	return bestFoundSolutionTotalCost;
 }
 
+// Get 
 std::string geneticCVRP::getBestFoundSolutionPointOrder() {
 	std::stringstream ss;
 	for (auto it = bestFoundSolutionPointOrder.begin(); it != bestFoundSolutionPointOrder.end(); it++) {

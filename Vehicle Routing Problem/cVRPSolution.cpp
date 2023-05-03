@@ -65,7 +65,7 @@ int cVRPSolution::getPointByIndex(int index)
     return pointOrder[index];
 }
 
-// Generates a random route by shuffling the order of points around.
+// Generate a random route by shuffling the order of points around.
 void cVRPSolution::generateRandomRoute(instanceFile instanceFile, std::vector<int>& pointOrder) {
     unsigned rnd = 0; // Creates a random formula for shuffling. //TODO maybe move it to calling function from specimen.cpp, since there's a new seed being initialised each time?
 
@@ -78,7 +78,9 @@ void cVRPSolution::generateRandomRoute(instanceFile instanceFile, std::vector<in
     totalCost = calculateTotalCost(instanceFile); 
 }
 
-// 
+// Construct a full route (including subroutes, which are separated by "0", marking return to the depot).
+// The subroutes are determined by going through the array of visited points in order and adding up the capacity of current subroute.
+// Once there's not enough capacity for the next point, insert return to depot and start constructing a new subroute.
 std::vector<int> cVRPSolution::getPointsOnARoute(instanceFile instanceFile) {
     std::vector<int> pointsOnARoute;
 
@@ -107,15 +109,15 @@ std::vector<int> cVRPSolution::getPointsOnARoute(instanceFile instanceFile) {
     return pointsOnARoute;
 }
 
-// Set
+// Set each point's location if it hasn't been set already.
 void cVRPSolution::setPointLocations(instanceFile instanceFile) {
-    if (pointLocationSet == true) return; //
+    if (pointLocationSet == true) return; // If points have had their locations assigned already.
 
-    pointLocation.assign(instanceFile.dimension, 0); // Fill values
+    pointLocation.assign(instanceFile.dimension, 0); // Fill values.
 
     for (int i = 0; i < instanceFile.dimension; i++) {
-        pointLocation[pointOrder[i]] = i; // Point i can be found at an i spot in the array.  
+        pointLocation[pointOrder[i]] = i; // Point i can be found at an i position in the array.  
     }
 
-    pointLocationSet = true; // 
+    pointLocationSet = true; // Mark that points have had their locations assigned already.
 }

@@ -16,16 +16,13 @@ public:
 	std::vector<point> pointsVector;
 	int** distanceBetweenPoints;
 
-	~instanceFile();
-	void loadInstanceData(std::string filename);
+	void loadInstanceData(std::string path, std::string filename);
 	void clearInstanceData();
-	void saveResultsToFile();
 	void printInstanceData();
 
 	void calculateDistancesBetweenPoints();
 	void dealocateDistancesBetweenPoints();
 
-	// For testing purposes only.
-	void printDistancesBetweenPoints();
+	void printDistancesBetweenPoints(); // For testing purposes only.
 };
 

@@ -6,27 +6,28 @@
 #include "geneticCVRP.h"
 #include "greedyCVRP.h"
 #include "randomCVRP.h"
+#include "Filepath.h"
 
-long long int read_QPC() // Used for tracking time.
+// Used for tracking time.
+long long int read_QPC() 
 {
 	LARGE_INTEGER count;
 	QueryPerformanceCounter(&count);
 	return((long long int)count.QuadPart);
 }
 
-// Opens a file with the instances.
+// Open a file with the instances and solve them using genetic algorithm.
 // The files are loaded one after another - when all the iterations of an algorithm for an instance are finished,
 // then and only then will the new instance file be loaded.
-void environment::geneticAlgorithmExperiment(std::string experimentFileName, std::string outputFileName, std::string generationResultsFileName) {
+void environment::geneticAlgorithmExperiment(Filepath filepath) {
 	geneticCVRP geneticCVRP;
 	std::ofstream generationResultsFile;
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency); 
 
-
-	experimentFile.open(experimentFileName); // Open input and output files.
-	testResultsFile.open(outputFileName);
-	generationResultsFile.open(generationResultsFileName);
+	experimentFile.open(filepath.getInitialisationFile()); // Open input and output files.
+	testResultsFile.open(filepath.getOutputFile());
+	generationResultsFile.open(filepath.getGenerationResultsFile());
 
 	if (experimentFile.is_open() && testResultsFile.is_open() && generationResultsFile.is_open()) { // If all files have been opened succesfully.
 		geneticCVRP.setAlgorithmParameters(experimentFile); // Sets algorithm parameters for the experiment.
@@ -36,7 +37,7 @@ void environment::geneticAlgorithmExperiment(std::string experimentFileName, std
 
 		while (!experimentFile.eof()){
 			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(instanceFileName);
+			instanceFile.loadInstanceData(filepath.instancesPath, instanceFileName);
 
 			overallBestSolutionFound = INT_MAX;
 
@@ -70,22 +71,38 @@ void environment::geneticAlgorithmExperiment(std::string experimentFileName, std
 				<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
 		}
 	}
+	else { // If any of the files can't be reached/the directory doesn't exist.
+		if (!experimentFile.is_open()) {
+			std::cout << "Initialisation file " << filepath.getInitialisationFile() << " couldn't be opened." << std::endl;
+		}
+
+		if (!testResultsFile.is_open()) {
+			std::cout << "Output file " << filepath.getOutputFile() << " couldn't be created or opened." << std::endl;
+		}
+
+		if (!generationResultsFile.is_open()) {
+			std::cout << "Generation results file " << filepath.getGenerationResultsFile() << " couldn't be created or opened." << std::endl;
+		}
+	}
 
 	experimentFile.close(); // Close input and output files.
 	testResultsFile.close();
 	generationResultsFile.close();
 }
 
-void environment::randomAlgorithmExperiment(std::string experimentFileName, std::string outputFileName, std::string iterationResultsFileName) {
+// Open a file with the instances and solve them using a basic pseudorandom algorithm.
+// The files are loaded one after another - when all the iterations of an algorithm for an instance are finished,
+// then and only then will the new instance file be loaded.
+void environment::randomAlgorithmExperiment(Filepath filepath) {
 	randomCVRP randomCVRP;
 	std::ofstream iterationResultsFile;
-	unsigned rnd = 0; // Creates a random formula for shuffling.
+	unsigned rnd = 0; // Create a random formula for shuffling.
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 
-	experimentFile.open(experimentFileName); // Open input and output files.
-	testResultsFile.open(outputFileName);
-	iterationResultsFile.open(iterationResultsFileName);
+	experimentFile.open(filepath.getInitialisationFile()); // Open input and output files.
+	testResultsFile.open(filepath.getOutputFile());
+	iterationResultsFile.open(filepath.getGenerationResultsFile());
 
 	if (experimentFile.is_open() && testResultsFile.is_open() && iterationResultsFile.is_open()) { // If all files have been opened succesfully.
 		randomCVRP.ignoreInitialAlgorithmParameters(experimentFile); // 
@@ -95,7 +112,7 @@ void environment::randomAlgorithmExperiment(std::string experimentFileName, std:
 
 		while (!experimentFile.eof()) {
 			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(instanceFileName);
+			instanceFile.loadInstanceData(filepath.instancesPath, instanceFileName);
 
 			averageError = 0.0;
 			averageTime = 0.0;
@@ -130,13 +147,16 @@ void environment::randomAlgorithmExperiment(std::string experimentFileName, std:
 	iterationResultsFile.close();
 }
 
-void environment::greedyAlgorithmExperiment(std::string experimentFileName, std::string outputFileName) {
+// Open a file with the instances and solve them using greedy algorithm.
+// The files are loaded one after another - when all the iterations of an algorithm for an instance are finished,
+// then and only then will the new instance file be loaded.
+void environment::greedyAlgorithmExperiment(Filepath filepath) {
 	greedyCVRP greedyCVRP;
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 
-	experimentFile.open(experimentFileName); // Open input and output files.
-	testResultsFile.open(outputFileName);
+	experimentFile.open(filepath.getInitialisationFile()); // Open input and output files.
+	testResultsFile.open(filepath.getOutputFile());
 
 	if (experimentFile.is_open() && testResultsFile.is_open()) { // If all files have been opened succesfully.
 		greedyCVRP.ignoreInitialAlgorithmParameters(experimentFile); // 
@@ -145,7 +165,7 @@ void environment::greedyAlgorithmExperiment(std::string experimentFileName, std:
 
 		while (!experimentFile.eof()) {
 			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(instanceFileName);
+			instanceFile.loadInstanceData(filepath.instancesPath, instanceFileName);
 
 			overallBestSolutionFound = INT_MAX;
 

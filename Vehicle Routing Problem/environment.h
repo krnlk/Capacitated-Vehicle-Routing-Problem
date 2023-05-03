@@ -2,8 +2,9 @@
 #include <string>
 
 #include "instanceFile.h"
+#include "Filepath.h"
 
-// This class contains about the experiment files and results of experiments.
+// This class contains information about the experiment files and results of experiments.
 // It is also used to save the results in a file.
 class environment
 {
@@ -23,9 +24,9 @@ class environment
 	std::string bestFoundRoutePath;
 	double bestError;
 
-public:
-	void geneticAlgorithmExperiment(std::string experimentFileName, std::string outputFileName, std::string generationResultsFileName);
-	void randomAlgorithmExperiment(std::string experimentFileName, std::string outputFileName, std::string iterationResultsFileName);
-	void greedyAlgorithmExperiment(std::string experimentFileName, std::string outputFileName);
+	public:
+		void geneticAlgorithmExperiment(Filepath filepath);
+		void randomAlgorithmExperiment(Filepath filepath);
+		void greedyAlgorithmExperiment(Filepath filepath);
 };
 
