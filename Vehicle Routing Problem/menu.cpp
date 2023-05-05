@@ -5,185 +5,250 @@
 #include "menu.h"
 #include "environment.h"
 
-// If a settings file exists, load the name of the file with the initialisation data
-// and the names of the output files.
-void menu::loadSettings() {
-	std::ifstream settingsFile;
-
-	settingsFile.open(this->filepath.getSettingsFile()); // Attempt to open a file.
-
-	if (settingsFile) { // If file exists.
-		settingsFile >> this->filepath.initialisationFileName >> this->filepath.outputFileName >> this->filepath.generationResultsFileName; // Load output file names.
-	}
-
-	// Go to main menu.
-	startDialogue();
-}
-
 // Main menu.
 void menu::startDialogue() {
-	environment environment; // Used to store data of each experiment.
-
 	this->filepath.loadSettingsFile(); // Load initial settings for files.
 
 	while (!exitProgram) { // As long as "Exit the program" option hasn't been selected, show the main menu after one of the options' output finishes.
 		// Options dialogue.
-		std::cout << "(1) Start the genetic cVRP algorithm." << std::endl;
-		std::cout << "(2) Start the random cVRP algorithm." << std::endl;
-		std::cout << "(3) Start the greedy cVRP algorithm." << std::endl;
-		std::cout << "(4) Change settings." << std::endl;
-		std::cout << "(?) Check current settings." << std::endl;
-		std::cout << "(e) Exit the program." << std::endl;
-
-		std::cout << std::endl << std::endl << std::endl; // Spacing after options dialogue.
-
-		userInput = _getch(); // Read input from the keyboard without the user needing to press enter.
-
-		switch (userInput) { // Perform an action selected by user input.
-		case '1': // Start the genetic cVRP algorithm.
-			std::cout << "Beginning experiment using genetic algorithm." << std::endl;
-			std::cout << "Data will be loaded from " << this->filepath.initialisationFileName
-				<< " file in " << this->filepath.initialisationPath << " directory " << std::endl;
-			std::cout << "and saved to files " << this->filepath.outputFileName << " in " << this->filepath.outputPath 
-				<< " directory and " << this->filepath.generationResultsFileName << " in " << this->filepath.generationResultsPath 
-				<< " directory." << std::endl;
-			environment.geneticAlgorithmExperiment(this->filepath);
-			std::cout << "The experiment has finished." << std::endl;
-			break;
-
-		case '2': // Start the random cVRP algorithm.
-			std::cout << "Beginning experiment using random algorithm." << std::endl;
-			std::cout << "Data will be loaded from " << this->filepath.initialisationFileName
-				<< " file in " << this->filepath.initialisationPath << " directory and saved to files " << this->filepath.outputFileName
-				<< " in " << this->filepath.outputPath << "directory and " << this->filepath.generationResultsFileName
-				<< " in " << this->filepath.generationResultsPath << " directory." << std::endl;
-			environment.randomAlgorithmExperiment(this->filepath);
-			std::cout << "The experiment has finished." << std::endl;
-			break;
-
-		case '3': // Start the greedy cVRP algorithm.
-			std::cout << "Beginning experiment using greedy algorithm." << std::endl;
-			std::cout << "Data will be loaded from " << this->filepath.initialisationFileName << " file in "
-				<< this->filepath.initialisationPath << " directory and saved to file " << this->filepath.outputFileName
-				<< " in " << this->filepath.outputPath << " directory." << std::endl;
-			environment.greedyAlgorithmExperiment(this->filepath);
-			std::cout << "The experiment has finished." << std::endl;
-			break;
-
-		case '4': // Change settings.
-			this->changesDialogue();
-			break;
-
-		case '?': // Check current settings.
-			std::cout << "Currently initialisation data is loaded from a file named " << this->filepath.initialisationFileName
-				<< " in " << this->filepath.initialisationPath << " directory." << std::endl;
-			std::cout << "Experiment results are currently being saved to a file named " << this->filepath.outputFileName
-				<< " in " << this->filepath.outputPath << " directory." << std::endl;
-			std::cout << "Results for each generation are currently being saved to a file named " << this->filepath.generationResultsFileName
-				<< " in " << this->filepath.generationResultsPath << " directory." << std::endl;
-			break;
-
-		case 'e': // Exit the program.
-			exitProgram = true;
-			break;
-
-		default: // If the user didn't select any of the options above, show main menu and ask for input again.
-			break;
-		}
-
-		std::cout << std::endl << std::endl << std::endl; // Spacing between main menu user input and option output.
+		this->printMainMenu();
+		this->mainMenuSwitch();
 	}
+}
+
+// Prints options for main menu.
+void menu::printMainMenu()
+{
+	std::cout << "(1) Start the genetic cVRP algorithm." << std::endl;
+	std::cout << "(2) Start the random cVRP algorithm." << std::endl;
+	std::cout << "(3) Start the greedy cVRP algorithm." << std::endl;
+	std::cout << "(4) Change settings." << std::endl;
+	std::cout << "(?) Check current settings." << std::endl;
+	std::cout << "(e) Exit the program." << std::endl;
+
+	std::cout << std::endl << std::endl << std::endl; // Spacing after options dialogue.
+}
+
+void menu::mainMenuSwitch()
+{
+	userInput = _getch(); // Read input from the keyboard without the user needing to press enter.
+
+	switch (userInput) { // Perform an action selected by user input.
+	case '1': // Start the genetic cVRP algorithm.
+		this->startGeneticCVRP();
+		break;
+
+	case '2': // Start the random cVRP algorithm.
+		this->startRandomCVRP();
+		break;
+
+	case '3': // Start the greedy cVRP algorithm.
+		this->startGreedyCVRP();
+		break;
+
+	case '4': // Change settings.
+		this->changesDialogue();
+		break;
+
+	case '?': // Check current settings.
+		this->checkSettings();
+		break;
+
+	case 'e': // Exit the program.
+		exitProgram = true;
+		break;
+
+	default: // If the user didn't select any of the options above, show main menu and ask for input again.
+		break;
+	}
+
+	std::cout << std::endl << std::endl << std::endl; // Spacing between main menu user input and option output.
+}
+
+// 
+void menu::startGeneticCVRP()
+{
+	std::cout << "Beginning experiment using genetic algorithm." << std::endl;
+	std::cout << "Data will be loaded from " << this->filepath.getInitialisationFileName()
+		<< " file in " << this->filepath.getInitialisationPath() << " directory " << std::endl;
+	std::cout << "and saved to files " << this->filepath.getOutputFileName() << " in " << this->filepath.getOutputPath()
+		<< " directory and " << this->filepath.getGenerationResultsFileName() << " in " << this->filepath.getGenerationResultsPath()
+		<< " directory." << std::endl;
+	environment.geneticAlgorithmExperiment(this->filepath);
+	std::cout << "The experiment has finished." << std::endl;
+}
+
+// 
+void menu::startRandomCVRP()
+{
+	std::cout << "Beginning experiment using random algorithm." << std::endl;
+	std::cout << "Data will be loaded from " << this->filepath.getInitialisationFileName()
+		<< " file in " << this->filepath.getInitialisationPath() << " directory and saved to files " << this->filepath.getOutputFileName()
+		<< " in " << this->filepath.getOutputPath() << "directory and " << this->filepath.getGenerationResultsFileName()
+		<< " in " << this->filepath.getGenerationResultsPath() << " directory." << std::endl;
+	environment.randomAlgorithmExperiment(this->filepath);
+	std::cout << "The experiment has finished." << std::endl;
+}
+
+// 
+void menu::startGreedyCVRP()
+{
+	std::cout << "Beginning experiment using greedy algorithm." << std::endl;
+	std::cout << "Data will be loaded from " << this->filepath.getInitialisationFileName() << " file in "
+		<< this->filepath.getInitialisationPath() << " directory and saved to file " << this->filepath.getOutputFileName()
+		<< " in " << this->filepath.getOutputPath() << " directory." << std::endl;
+	environment.greedyAlgorithmExperiment(this->filepath);
+	std::cout << "The experiment has finished." << std::endl;
+}
+
+// 
+void menu::checkSettings()
+{
+	std::cout << "Currently initialisation data is loaded from a file named " << this->filepath.getInitialisationFileName()
+		<< " in " << this->filepath.getInitialisationPath() << " directory." << std::endl;
+	std::cout << "Experiment results are currently being saved to a file named " << this->filepath.getOutputFileName()
+		<< " in " << this->filepath.getOutputPath() << " directory." << std::endl;
+	std::cout << "Results for each generation are currently being saved to a file named " << this->filepath.getGenerationResultsFileName()
+		<< " in " << this->filepath.getGenerationResultsPath() << " directory." << std::endl;
 }
 
 // Menu for changing files.
 void menu::changesDialogue() 
 {
 	bool exitChangeSettings = false;
-	std::string changeInput;
 
 	while (!exitChangeSettings) {
 		// Options dialogue.
-		std::cout << "(1) Change the initialisation data path." << std::endl;
-		std::cout << "(2) Change the initialisation data file." << std::endl;
-		std::cout << "(3) Change the path to instance files." << std::endl;
-		std::cout << "(4) Change test results output path." << std::endl;
-		std::cout << "(5) Change test results output file." << std::endl;
-		std::cout << "(6) Change generation results output path." << std::endl;
-		std::cout << "(7) Change generation results output file." << std::endl;
-		std::cout << "(8) Back to main menu." << std::endl;
-		std::cout << "(?) Check current settings." << std::endl;
-
-		std::cout << std::endl << std::endl << std::endl; // Spacing after options dialogue.
-
-		userInput = _getch(); // Read input from the keyboard without the user needing to press enter.
-
-		switch (userInput) {
-		case '1': // Change the initialisation data path.
-			std::cout << "Input new path to initialisation file: " << std::endl;
-			std::cin >> changeInput;
-			this->filepath.setInitialisationPath(changeInput);
-			std::cout << "Initialisation file path has been changed to: " << this->filepath.initialisationPath << std::endl;
-			break;
-
-		case '2': // Change the initialisation data file.
-			std::cout << "Input new initialisation file name: " << std::endl;
-			std::cin >> changeInput;
-			this->filepath.setInitialisationFileName(changeInput);
-			std::cout << "Initialisation file name has been changed to: " << this->filepath.initialisationFileName << std::endl;
-			break;
-
-		case '3': // Change the path to instance files.
-			std::cout << "Input new path to instance files: " << std::endl;
-			std::cin >> changeInput;
-			this->filepath.setInstancesPath(changeInput);
-			std::cout << "Instance files path has been changed to: " << this->filepath.instancesPath << std::endl;
-			break;
-
-		case '4': // Change test results output path.
-			std::cout << "Input new path to test results output: " << std::endl;
-			std::cin >> changeInput;
-			this->filepath.setOutputPath(changeInput);
-			std::cout << "Test results output file path has been changed to: " << this->filepath.outputPath << std::endl;
-			break;
-
-		case '5': // Change test results output file.
-			std::cout << "Input new test results output file name: " << std::endl;
-			std::cin >> changeInput;
-			this->filepath.setOutputFileName(changeInput);
-			std::cout << "Test results output file name has been changed to: " << this->filepath.outputFileName << std::endl;
-			break;
-
-		case '6': // Change generation results output path.
-			std::cout << "Input new path to generation results output: " << std::endl;
-			std::cin >> changeInput;
-			this->filepath.setGenerationResultsPath(changeInput);
-			std::cout << "Generation results output path has been changed to: " << this->filepath.generationResultsPath << std::endl;
-			break;
-
-		case '7': // Change generation results output file.
-			std::cout << "Input new generation results output file name: " << std::endl;
-			std::cin >> changeInput;
-			this->filepath.setGenerationResultsFileName(changeInput);
-			std::cout << "Generation results output file name has been changed to: " << this->filepath.generationResultsFileName << std::endl;
-			break;
-
-		case '8': // Back to main menu.
-			exitChangeSettings = true;
-			break;
-
-		case '?': // Check current settings.
-			std::cout << "Currently initialisation data is loaded from a file named " << this->filepath.initialisationFileName
-				<< " in " << this->filepath.initialisationPath << " directory." << std::endl;
-			std::cout << "Experiment results are currently being saved to a file named " << this->filepath.outputFileName
-				<< " in " << this->filepath.outputPath << " directory." << std::endl;
-			std::cout << "Results for each generation are currently being saved to a file named " << this->filepath.generationResultsFileName
-				<< " in " << this->filepath.generationResultsPath << " directory." << std::endl;
-			break;
-
-		default: // If the user didn't select any of the options above, show main menu and ask for input again.
-			break;
-		}
-
-		std::cout << std::endl << std::endl << std::endl; // Spacing between main menu user input and option output.
+		this->printChangesMenu();
+		this->changesMenuSwitch(exitChangeSettings);
 	}
+}
+
+//
+void menu::printChangesMenu()
+{
+	// Options dialogue.
+	std::cout << "(1) Change the initialisation data path." << std::endl;
+	std::cout << "(2) Change the initialisation data file." << std::endl;
+	std::cout << "(3) Change the path to instance files." << std::endl;
+	std::cout << "(4) Change test results output path." << std::endl;
+	std::cout << "(5) Change test results output file." << std::endl;
+	std::cout << "(6) Change generation results output path." << std::endl;
+	std::cout << "(7) Change generation results output file." << std::endl;
+	std::cout << "(8) Back to main menu." << std::endl;
+	std::cout << "(?) Check current settings." << std::endl;
+
+	std::cout << std::endl << std::endl << std::endl; // Spacing after options dialogue.
+}
+
+// 
+void menu::changesMenuSwitch(bool &exitChangeSettings)
+{
+	userInput = _getch(); // Read input from the keyboard without the user needing to press enter.
+
+	switch (userInput) {
+	case '1': // Change the initialisation data path.
+		this->changeInitialisationPath();
+		break;
+
+	case '2': // Change the initialisation data file.
+		this->changeIniitalisationFileName();
+		break;
+
+	case '3': // Change the path to instance files.
+		this->changeInstancePath();
+		break;
+
+	case '4': // Change test results output path.
+		this->changeOutputPath();
+		break;
+
+	case '5': // Change test results output file.
+		this->changeOutputFileName();
+		break;
+
+	case '6': // Change generation results output path.
+		this->changeGenerationResultsPath();
+		break;
+
+	case '7': // Change generation results output file.
+		this->changeGenerationResultsFileName();
+		break;
+
+	case '8': // Back to main menu.
+		exitChangeSettings = true;
+		break;
+
+	case '?': // Check current settings.
+		this->checkSettings();
+		break;
+
+	default: // If the user didn't select any of the options above, show main menu and ask for input again.
+		break;
+	}
+
+	std::cout << std::endl << std::endl << std::endl; // Spacing between main menu user input and option output.
+}
+
+// 
+void menu::changeInitialisationPath()
+{
+	std::cout << "Input new path to initialisation file: " << std::endl;
+	std::cin >> changeInput;
+	this->filepath.setInitialisationPath(changeInput);
+	std::cout << "Initialisation file path has been changed to: " << this->filepath.getInitialisationPath() << std::endl;
+}
+
+// 
+void menu::changeIniitalisationFileName()
+{
+	std::cout << "Input new initialisation file name: " << std::endl;
+	std::cin >> changeInput;
+	this->filepath.setInitialisationFileName(changeInput);
+	std::cout << "Initialisation file name has been changed to: " << this->filepath.getInitialisationFileName() << std::endl;
+}
+
+// 
+void menu::changeInstancePath()
+{
+	std::cout << "Input new path to instance files: " << std::endl;
+	std::cin >> changeInput;
+	this->filepath.setInstancesPath(changeInput);
+	std::cout << "Instance files path has been changed to: " << this->filepath.getInstancesPath() << std::endl;
+}
+
+// 
+void menu::changeOutputPath()
+{
+	std::cout << "Input new path to test results output: " << std::endl;
+	std::cin >> changeInput;
+	this->filepath.setOutputPath(changeInput);
+	std::cout << "Test results output file path has been changed to: " << this->filepath.getOutputPath() << std::endl;
+}
+
+// 
+void menu::changeOutputFileName()
+{
+	std::cout << "Input new test results output file name: " << std::endl;
+	std::cin >> changeInput;
+	this->filepath.setOutputFileName(changeInput);
+	std::cout << "Test results output file name has been changed to: " << this->filepath.getOutputFileName() << std::endl;
+}
+
+// 
+void menu::changeGenerationResultsPath()
+{
+	std::cout << "Input new path to generation results output: " << std::endl;
+	std::cin >> changeInput;
+	this->filepath.setGenerationResultsPath(changeInput);
+	std::cout << "Generation results output path has been changed to: " << this->filepath.getGenerationResultsPath() << std::endl;
+}
+
+// 
+void menu::changeGenerationResultsFileName()
+{
+	std::cout << "Input new generation results output file name: " << std::endl;
+	std::cin >> changeInput;
+	this->filepath.setGenerationResultsFileName(changeInput);
+	std::cout << "Generation results output file name has been changed to: " << this->filepath.getGenerationResultsFileName() << std::endl;
 }

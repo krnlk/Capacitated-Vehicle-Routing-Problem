@@ -9,8 +9,9 @@ class greedyCVRP : public cVRPSolution
 	int currentCapacity;
 	int currentPoint;
 
+	void findNextPoint(instanceFile instanceFile);
+
 	public:
-		void findNextPoint(instanceFile instanceFile);
 		void generateASolution(instanceFile instanceFile);
 		void ignoreInitialAlgorithmParameters(std::ifstream& experimentFile);
 };

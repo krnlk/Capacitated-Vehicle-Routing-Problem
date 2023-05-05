@@ -13,7 +13,7 @@ void greedyCVRP::findNextPoint(instanceFile instanceFile) {
 
     for (int i = 0; i < pointsLeftToVisit.size(); i++) {
         if (instanceFile.distanceBetweenPoints[currentPoint][pointsLeftToVisit[i]] < lowestCost 
-            && currentCapacity + instanceFile.pointsVector[pointsLeftToVisit[i]].getWeight() <= instanceFile.maxCapacity) {
+            && currentCapacity + instanceFile.pointsVector[pointsLeftToVisit[i]].getWeight() <= instanceFile.getMaxCapacity()) {
             lowestCostPointIndex = i;
             lowestCostPoint = pointsLeftToVisit[i];
             lowestCost = instanceFile.distanceBetweenPoints[currentPoint][pointsLeftToVisit[i]];

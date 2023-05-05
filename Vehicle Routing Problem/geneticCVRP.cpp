@@ -143,7 +143,7 @@ void geneticCVRP::analyseNewGeneration(instanceFile instanceFile, int generation
 
 	if (newBestSpecimenFound) setBestSpecimenInfo(instanceFile, bestSpecimenIndex);
 
-	experimentResultsFile << instanceFile.fileName << ";" << iteration << ";" << generationNumber << ";" << 
+	experimentResultsFile << instanceFile.getFileName() << ";" << iteration << ";" << generationNumber << ";" << 
 		bestFoundSolutionTotalCost << ";" << worstFoundSolutionTotalCost << ";" << 
 		averageSolutionTotalCost / numberOfSpecimenInAGeneration << ";" <<
 		currentGenerationBestFoundSolutionTotalCost << ";" << currentGenerationWorstFoundSolutionTotalCost << std::endl;

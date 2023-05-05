@@ -7,14 +7,18 @@
 // This class represents a single instance file, along with all its data.
 class instanceFile
 {
-public:
 	std::string fileName;
 	int optimalValue;
 	int maxCapacity;
-	int dimension;
 
+public:
+	int dimension;
 	std::vector<point> pointsVector;
 	int** distanceBetweenPoints;
+
+	std::string getFileName();
+	int getOptimalValue();
+	int getMaxCapacity();
 
 	void loadInstanceData(std::string path, std::string filename);
 	void clearInstanceData();
@@ -24,5 +28,6 @@ public:
 	void dealocateDistancesBetweenPoints();
 
 	void printDistancesBetweenPoints(); // For testing purposes only.
+
 };
 

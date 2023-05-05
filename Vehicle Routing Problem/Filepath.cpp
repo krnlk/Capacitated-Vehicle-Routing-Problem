@@ -8,6 +8,16 @@ std::string Filepath::getSettingsFile()
 	return this->settingsPath + this->settingsFileName;
 }
 
+std::string Filepath::getInitialisationPath()
+{
+	return this->initialisationPath;
+}
+
+std::string Filepath::getInitialisationFileName()
+{
+	return this->initialisationFileName;
+}
+
 std::string Filepath::getInitialisationFile()
 {
 	return this->initialisationPath + this->initialisationFileName;
@@ -15,7 +25,17 @@ std::string Filepath::getInitialisationFile()
 
 std::string Filepath::getInstancesPath()
 {
-	return std::string();
+	return this->instancesPath;
+}
+
+std::string Filepath::getOutputPath()
+{
+	return this->outputPath;
+}
+
+std::string Filepath::getOutputFileName()
+{
+	return this->outputFileName;
 }
 
 std::string Filepath::getOutputFile()
@@ -23,9 +43,54 @@ std::string Filepath::getOutputFile()
 	return this->outputPath + this->outputFileName;
 }
 
+std::string Filepath::getGenerationResultsPath()
+{
+	return this->generationResultsPath;
+}
+
+std::string Filepath::getGenerationResultsFileName()
+{
+	return this->generationResultsFileName;
+}
+
 std::string Filepath::getGenerationResultsFile()
 {
 	return this->generationResultsPath + this->generationResultsFileName;
+}
+
+void Filepath::setInitialisationPath(std::string path)
+{
+	this->initialisationPath = path;
+}
+
+void Filepath::setInitialisationFileName(std::string fileName)
+{
+	this->initialisationFileName = fileName;
+}
+
+void Filepath::setInstancesPath(std::string path)
+{
+	this->instancesPath = path;
+}
+
+void Filepath::setOutputPath(std::string path)
+{
+	this->outputPath = path;
+}
+
+void Filepath::setOutputFileName(std::string fileName)
+{
+	this->outputFileName = fileName;
+}
+
+void Filepath::setGenerationResultsPath(std::string path)
+{
+	this->generationResultsPath = path;
+}
+
+void Filepath::setGenerationResultsFileName(std::string fileName)
+{
+	this->generationResultsFileName = fileName;
 }
 
 // Load the paths and names of files needed from a settings file. 
@@ -69,39 +134,4 @@ void Filepath::loadSettingsFile()
 
 		newSettingsFile.close();
 	}
-}
-
-void Filepath::setInitialisationPath(std::string path)
-{
-	this->initialisationPath = path;
-}
-
-void Filepath::setInitialisationFileName(std::string fileName)
-{
-	this->initialisationFileName = fileName;
-}
-
-void Filepath::setInstancesPath(std::string path)
-{
-	this->instancesPath = path;
-}
-
-void Filepath::setOutputPath(std::string path)
-{
-	this->outputPath = path;
-}
-
-void Filepath::setOutputFileName(std::string fileName)
-{
-	this->outputFileName = fileName;
-}
-
-void Filepath::setGenerationResultsPath(std::string path)
-{
-	this->generationResultsPath = path;
-}
-
-void Filepath::setGenerationResultsFileName(std::string fileName)
-{
-	this->generationResultsFileName = fileName;
 }

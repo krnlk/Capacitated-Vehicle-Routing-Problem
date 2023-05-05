@@ -37,7 +37,7 @@ void environment::geneticAlgorithmExperiment(Filepath filepath) {
 
 		while (!experimentFile.eof()){
 			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(filepath.instancesPath, instanceFileName);
+			instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
 
 			overallBestSolutionFound = INT_MAX;
 
@@ -51,7 +51,7 @@ void environment::geneticAlgorithmExperiment(Filepath filepath) {
 				geneticCVRP.mainAlgorithmLoop(instanceFile, generationResultsFile, i + 1);
 				elapsed = read_QPC() - start; // Stop tracking time.
 				// After the algorithm is over, save the results to a file.
-				averageError += ((geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.optimalValue) / (double) instanceFile.optimalValue);
+				averageError += ((geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double) instanceFile.getOptimalValue());
 				averageTime += (elapsed / (double) frequency);
 				averageSolution += geneticCVRP.getBestFoundSolutionTotalCost();
 
@@ -67,7 +67,7 @@ void environment::geneticAlgorithmExperiment(Filepath filepath) {
 			averageTime = averageTime / (double) instanceRepeats;
 			averageSolution = averageSolution / (double) instanceRepeats;
 
-			testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.optimalValue << ";" << overallBestSolutionFound
+			testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
 				<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
 		}
 	}
@@ -112,7 +112,7 @@ void environment::randomAlgorithmExperiment(Filepath filepath) {
 
 		while (!experimentFile.eof()) {
 			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(filepath.instancesPath, instanceFileName);
+			instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
 
 			averageError = 0.0;
 			averageTime = 0.0;
@@ -123,7 +123,7 @@ void environment::randomAlgorithmExperiment(Filepath filepath) {
 				randomCVRP.generateASolution(instanceFile, iterationResultsFile, i, rnd);
 				elapsed = read_QPC() - start; // Stop tracking time.
 				// After the algorithm is over, save the results to a file.
-				averageError += ((randomCVRP.getTotalCost() - instanceFile.optimalValue) / (double) instanceFile.optimalValue);
+				averageError += ((randomCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double) instanceFile.getOptimalValue());
 				averageTime += (elapsed / (double) frequency);
 				averageSolution += randomCVRP.getTotalCost();
 
@@ -137,7 +137,7 @@ void environment::randomAlgorithmExperiment(Filepath filepath) {
 			averageTime = averageTime / (double) instanceRepeats;
 			averageSolution = averageSolution / (double) instanceRepeats;
 
-			testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.optimalValue << ";" << overallBestSolutionFound
+			testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
 				<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
 		}
 	}
@@ -165,7 +165,7 @@ void environment::greedyAlgorithmExperiment(Filepath filepath) {
 
 		while (!experimentFile.eof()) {
 			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(filepath.instancesPath, instanceFileName);
+			instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
 
 			overallBestSolutionFound = INT_MAX;
 
@@ -176,10 +176,10 @@ void environment::greedyAlgorithmExperiment(Filepath filepath) {
 			greedyCVRP.generateASolution(instanceFile);
 			elapsed = read_QPC() - start; // Stop tracking time.
 
-			averageError = ((greedyCVRP.getTotalCost() - instanceFile.optimalValue) / (double) instanceFile.optimalValue);
+			averageError = ((greedyCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double) instanceFile.getOptimalValue());
 			averageTime = (elapsed / (double) frequency);
 
-			testResultsFile << instanceFileName << ";" << instanceFile.optimalValue << ";" << greedyCVRP.getTotalCost() 
+			testResultsFile << instanceFileName << ";" << instanceFile.getOptimalValue() << ";" << greedyCVRP.getTotalCost() 
 				<< ";" << greedyCVRP.getPointOrder() << ";" << averageError * 100.00 << "%" << ";" << averageTime << std::endl;
 		}
 	}

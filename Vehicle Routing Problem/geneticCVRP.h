@@ -25,20 +25,10 @@ class geneticCVRP
 	std::vector<specimen> allCurrentSpecimen;
 	std::vector<specimen> newGenerationOfSpecimen;
 
-	public: 	
-		void setAlgorithmParameters(std::ifstream &experimentParametersFile);
-
-		int getBestFoundSolutionTotalCost();
-
 		void calculateSumOfRanks();
-
-		std::string getBestFoundSolutionPointOrder();
-
-		void clearInfo();
 
 		void setBestSpecimenInfo(instanceFile instanceFile, int bestSpecimenIndex);
 
-		void mainAlgorithmLoop(instanceFile instanceFile, std::ofstream& experimentResultsFile, int iteration);
 		void analyseNewGeneration(instanceFile instanceFile, int generationNumber, std::ofstream& experimentResultsFile, int iteration);
 
 		void generateInitialSpecimen(instanceFile instanceFile);
@@ -63,5 +53,14 @@ class geneticCVRP
 		void createNewOffspring(instanceFile instanceFile);
 
 		void calculateFitnessFunction();
+
+public:
+	int getBestFoundSolutionTotalCost();
+	std::string getBestFoundSolutionPointOrder();
+
+	void setAlgorithmParameters(std::ifstream& experimentParametersFile);
+
+	void mainAlgorithmLoop(instanceFile instanceFile, std::ofstream& experimentResultsFile, int iteration);
+	void clearInfo();
 };
 

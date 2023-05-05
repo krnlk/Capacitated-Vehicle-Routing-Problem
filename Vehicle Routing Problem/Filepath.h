@@ -3,7 +3,6 @@
 
 class Filepath
 {
-public:
 	std::string settingsPath = ""; // Path to the settings file.
 	std::string settingsFileName = "settings.ini"; // Name of the file where earlier experiment file names are stored.
 
@@ -18,13 +17,22 @@ public:
 	std::string generationResultsPath = "Results/GeneticGenerations/"; // (Genetic algorithm) Path to the output file for each generation.
 	std::string generationResultsFileName = "generationResults.txt"; // (Genetic algorithm) Name of the file containing experiment generation output.
 
+public:
 	std::string getSettingsFile();
-	std::string getInitialisationFile();
-	std::string getInstancesPath();
-	std::string getOutputFile();
-	std::string getGenerationResultsFile();
 
-	void loadSettingsFile();
+	std::string getInitialisationPath();
+	std::string getInitialisationFileName();
+	std::string getInitialisationFile();
+
+	std::string getInstancesPath();
+
+	std::string getOutputPath();
+	std::string getOutputFileName();
+	std::string getOutputFile();
+
+	std::string getGenerationResultsPath();
+	std::string getGenerationResultsFileName();
+	std::string getGenerationResultsFile();
 
 	void setInitialisationPath(std::string path);
 	void setInitialisationFileName(std::string fileName);
@@ -36,5 +44,7 @@ public:
 
 	void setGenerationResultsPath(std::string path);
 	void setGenerationResultsFileName(std::string fileName);
+
+	void loadSettingsFile();
 };
 

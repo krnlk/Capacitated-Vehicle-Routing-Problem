@@ -17,7 +17,7 @@ int cVRPSolution::calculateTotalCost(instanceFile instanceFile) {
     int currentCapacity = 0;
 
     for (int i = 1; i < instanceFile.dimension; ) { // First point is a depot, therefore it's ignored. Visit all other points.
-        if (currentCapacity + instanceFile.pointsVector[pointOrder[i]].getWeight() <= instanceFile.maxCapacity) { // If there's capacity for the next point.
+        if (currentCapacity + instanceFile.pointsVector[pointOrder[i]].getWeight() <= instanceFile.getMaxCapacity()) { // If there's capacity for the next point.
             if (currentCapacity == 0) totalCost += instanceFile.distanceBetweenPoints[0][pointOrder[i]]; // Get distance between depot and first point on a new subroute.
             else totalCost += instanceFile.distanceBetweenPoints[pointOrder[i - 1]][pointOrder[i]]; // Get distance between previous point and current point in a subroute.
 
@@ -89,7 +89,7 @@ std::vector<int> cVRPSolution::getPointsOnARoute(instanceFile instanceFile) {
     pointsOnARoute.push_back(0);
 
     for (int i = 1; i < instanceFile.dimension; ) {
-        if (currentCapacity + instanceFile.pointsVector[pointOrder[i]].getWeight() <= instanceFile.maxCapacity) { // If there's capacity for the next point.
+        if (currentCapacity + instanceFile.pointsVector[pointOrder[i]].getWeight() <= instanceFile.getMaxCapacity()) { // If there's capacity for the next point.
             pointsOnARoute.push_back(pointOrder[i]);
             currentCapacity += instanceFile.pointsVector[pointOrder[i]].getWeight(); // Increase capacity for current point.
             i++;

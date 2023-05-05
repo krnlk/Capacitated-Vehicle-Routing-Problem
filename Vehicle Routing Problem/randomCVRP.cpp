@@ -20,7 +20,7 @@ void randomCVRP::generateASolution(instanceFile instanceFile, std::ofstream& exp
 	std::shuffle(pointOrder.begin() + 1, pointOrder.end(), std::default_random_engine(rnd)); // Shuffle the order of points on a route (don't shuffle depot).
 	totalCost = calculateTotalCost(instanceFile); 	
 	
-	experimentResultsFile << instanceFile.fileName << ";" << iteration + 1 << ";" << totalCost << std::endl;
+	experimentResultsFile << instanceFile.getFileName() << ";" << iteration + 1 << ";" << totalCost << std::endl;
 
 	instanceFile.dealocateDistancesBetweenPoints();
 }

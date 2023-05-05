@@ -4,6 +4,21 @@
 
 #include "instanceFile.h"
 
+std::string instanceFile::getFileName()
+{
+	return this->fileName;
+}
+
+int instanceFile::getOptimalValue()
+{
+	return this->optimalValue;
+}
+
+int instanceFile::getMaxCapacity()
+{
+	return this->maxCapacity;
+}
+
 // Load data of an instance file.
 void instanceFile::loadInstanceData(std::string path, std::string filename) {
 	std::ifstream instanceFile;
