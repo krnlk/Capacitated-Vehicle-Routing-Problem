@@ -29,6 +29,7 @@ void menu::printMainMenu()
 	std::cout << std::endl << std::endl << std::endl; // Spacing after options dialogue.
 }
 
+// Read user's input and choose one from the main menu options based on it (or terminate the program).
 void menu::mainMenuSwitch()
 {
 	userInput = _getch(); // Read input from the keyboard without the user needing to press enter.
@@ -65,7 +66,7 @@ void menu::mainMenuSwitch()
 	std::cout << std::endl << std::endl << std::endl; // Spacing between main menu user input and option output.
 }
 
-// 
+// Start the cVRP experiment using genetic algorithm.
 void menu::startGeneticCVRP()
 {
 	std::cout << "Beginning experiment using genetic algorithm." << std::endl;
@@ -78,7 +79,7 @@ void menu::startGeneticCVRP()
 	std::cout << "The experiment has finished." << std::endl;
 }
 
-// 
+// Start the cVRP experiment using random algorithm.
 void menu::startRandomCVRP()
 {
 	std::cout << "Beginning experiment using random algorithm." << std::endl;
@@ -90,7 +91,7 @@ void menu::startRandomCVRP()
 	std::cout << "The experiment has finished." << std::endl;
 }
 
-// 
+// Start the cVRP experiment using greedy algorithm.
 void menu::startGreedyCVRP()
 {
 	std::cout << "Beginning experiment using greedy algorithm." << std::endl;
@@ -101,7 +102,7 @@ void menu::startGreedyCVRP()
 	std::cout << "The experiment has finished." << std::endl;
 }
 
-// 
+// Print current file settings.
 void menu::checkSettings()
 {
 	std::cout << "Currently initialisation data is loaded from a file named " << this->filepath.getInitialisationFileName()
@@ -124,7 +125,7 @@ void menu::changesDialogue()
 	}
 }
 
-//
+// Print the options from menu for changing files.
 void menu::printChangesMenu()
 {
 	// Options dialogue.
@@ -141,7 +142,7 @@ void menu::printChangesMenu()
 	std::cout << std::endl << std::endl << std::endl; // Spacing after options dialogue.
 }
 
-// 
+// Read user's input and choose one of the options from menu for changing files based on it (or terminate the program).
 void menu::changesMenuSwitch(bool &exitChangeSettings)
 {
 	userInput = _getch(); // Read input from the keyboard without the user needing to press enter.
@@ -190,7 +191,7 @@ void menu::changesMenuSwitch(bool &exitChangeSettings)
 	std::cout << std::endl << std::endl << std::endl; // Spacing between main menu user input and option output.
 }
 
-// 
+// Change the initialisation file path.
 void menu::changeInitialisationPath()
 {
 	std::cout << "Input new path to initialisation file: " << std::endl;
@@ -199,7 +200,7 @@ void menu::changeInitialisationPath()
 	std::cout << "Initialisation file path has been changed to: " << this->filepath.getInitialisationPath() << std::endl;
 }
 
-// 
+// Change the initialisation file name.
 void menu::changeIniitalisationFileName()
 {
 	std::cout << "Input new initialisation file name: " << std::endl;
@@ -208,7 +209,7 @@ void menu::changeIniitalisationFileName()
 	std::cout << "Initialisation file name has been changed to: " << this->filepath.getInitialisationFileName() << std::endl;
 }
 
-// 
+// Change the path of the instance files.
 void menu::changeInstancePath()
 {
 	std::cout << "Input new path to instance files: " << std::endl;
@@ -217,7 +218,7 @@ void menu::changeInstancePath()
 	std::cout << "Instance files path has been changed to: " << this->filepath.getInstancesPath() << std::endl;
 }
 
-// 
+// Change the path of the output files.
 void menu::changeOutputPath()
 {
 	std::cout << "Input new path to test results output: " << std::endl;
@@ -226,7 +227,7 @@ void menu::changeOutputPath()
 	std::cout << "Test results output file path has been changed to: " << this->filepath.getOutputPath() << std::endl;
 }
 
-// 
+// Change the name of the output file.
 void menu::changeOutputFileName()
 {
 	std::cout << "Input new test results output file name: " << std::endl;
@@ -235,7 +236,7 @@ void menu::changeOutputFileName()
 	std::cout << "Test results output file name has been changed to: " << this->filepath.getOutputFileName() << std::endl;
 }
 
-// 
+// Change the path of the generation results output file.
 void menu::changeGenerationResultsPath()
 {
 	std::cout << "Input new path to generation results output: " << std::endl;
@@ -244,7 +245,7 @@ void menu::changeGenerationResultsPath()
 	std::cout << "Generation results output path has been changed to: " << this->filepath.getGenerationResultsPath() << std::endl;
 }
 
-// 
+// Change the name of the generation results output file.
 void menu::changeGenerationResultsFileName()
 {
 	std::cout << "Input new generation results output file name: " << std::endl;

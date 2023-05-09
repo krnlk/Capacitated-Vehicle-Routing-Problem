@@ -35,59 +35,72 @@ void environment::geneticAlgorithmExperiment(Filepath filepath) {
 		testResultsFile << "instance file;instance repeats;best known route cost;best found route cost;best found route path;average error;average time [s];average best solution" << std::endl;
 		generationResultsFile << "file name;iteration;generation;minimum specimen cost so far;maximum specimen cost so far;average specimen cost;minimum specimen cost this generation; maximum specimen cost this generation" << std::endl;
 
-		while (!experimentFile.eof()){
-			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
-
-			overallBestSolutionFound = INT_MAX;
-
-			averageError = 0.0;
-			averageTime = 0.0;
-			averageSolution = 0.0;
-
-			for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
-				geneticCVRP.clearInfo(); // Clear best found solution and its order from the previous run.
-				start = read_QPC(); // Start tracking time.
-				geneticCVRP.mainAlgorithmLoop(instanceFile, generationResultsFile, i + 1);
-				elapsed = read_QPC() - start; // Stop tracking time.
-				// After the algorithm is over, save the results to a file.
-				averageError += ((geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double) instanceFile.getOptimalValue());
-				averageTime += (elapsed / (double) frequency);
-				averageSolution += geneticCVRP.getBestFoundSolutionTotalCost();
-
-				if (geneticCVRP.getBestFoundSolutionTotalCost() < overallBestSolutionFound) {
-					overallBestSolutionFound = geneticCVRP.getBestFoundSolutionTotalCost();
-					bestFoundRoutePath = geneticCVRP.getBestFoundSolutionPointOrder();
-				}
-
-				std::cout << "Iteration number " << i + 1 << " of instance file " << instanceFileName << " has finished." << std::endl;
-			}
-
-			averageError = averageError / (double) instanceRepeats;
-			averageTime = averageTime / (double) instanceRepeats;
-			averageSolution = averageSolution / (double) instanceRepeats;
-
-			testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
-				<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
+		while (!experimentFile.eof()) {
+			this->geneticAlgorithmInstanceFileRepetitions(filepath, geneticCVRP, generationResultsFile);
 		}
 	}
 	else { // If any of the files can't be reached/the directory doesn't exist.
-		if (!experimentFile.is_open()) {
-			std::cout << "Initialisation file " << filepath.getInitialisationFile() << " couldn't be opened." << std::endl;
-		}
-
-		if (!testResultsFile.is_open()) {
-			std::cout << "Output file " << filepath.getOutputFile() << " couldn't be created or opened." << std::endl;
-		}
-
-		if (!generationResultsFile.is_open()) {
-			std::cout << "Generation results file " << filepath.getGenerationResultsFile() << " couldn't be created or opened." << std::endl;
-		}
+		this->geneticOrRandomAlgorithmFileOpenError(filepath, generationResultsFile);
 	}
 
 	experimentFile.close(); // Close input and output files.
 	testResultsFile.close();
 	generationResultsFile.close();
+}
+
+// A full set of repetitions of the geneticCVRP algorithm for one instance file.
+// Amount of repetitions is defined by the instanceRepeats value in the experiment file.
+void environment::geneticAlgorithmInstanceFileRepetitions(Filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile) {
+	experimentFile >> instanceFileName >> instanceRepeats;
+	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
+
+	overallBestSolutionFound = INT_MAX;
+
+	averageError = 0.0;
+	averageTime = 0.0;
+	averageSolution = 0.0;
+
+	for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
+		geneticCVRP.clearInfo(); // Clear best found solution and its order from the previous run.
+		start = read_QPC(); // Start tracking time.
+		geneticCVRP.mainAlgorithmLoop(instanceFile, generationResultsFile, i + 1);
+		elapsed = read_QPC() - start; // Stop tracking time.
+		// After the algorithm is over, save the results to a file.
+		averageError += ((geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+		averageTime += (elapsed / (double)frequency);
+		averageSolution += geneticCVRP.getBestFoundSolutionTotalCost();
+
+		if (geneticCVRP.getBestFoundSolutionTotalCost() < overallBestSolutionFound) {
+			overallBestSolutionFound = geneticCVRP.getBestFoundSolutionTotalCost();
+			bestFoundRoutePath = geneticCVRP.getBestFoundSolutionPointOrder();
+		}
+
+		std::cout << "Iteration number " << i + 1 << " of instance file " << instanceFileName << " has finished." << std::endl;
+	}
+
+	averageError = averageError / (double)instanceRepeats;
+	averageTime = averageTime / (double)instanceRepeats;
+	averageSolution = averageSolution / (double)instanceRepeats;
+
+	testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
+		<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
+}
+
+// Print out error messages to mark files which couldn't be properly opened.
+// Mandatory to pass ofstream as an argument using a reference, as it has no copy constructor.
+// Genetic and random algorithms only.
+void environment::geneticOrRandomAlgorithmFileOpenError(Filepath filepath, std::ofstream &generationResultsFile) {
+	if (!experimentFile.is_open()) {
+		std::cout << "Initialisation file " << filepath.getInitialisationFile() << " couldn't be opened." << std::endl;
+	}
+
+	if (!testResultsFile.is_open()) {
+		std::cout << "Output file " << filepath.getOutputFile() << " couldn't be created or opened." << std::endl;
+	}
+
+	if (!generationResultsFile.is_open()) {
+		std::cout << "Generation results file " << filepath.getGenerationResultsFile() << " couldn't be created or opened." << std::endl;
+	}
 }
 
 // Open a file with the instances and solve them using a basic pseudorandom algorithm.
@@ -111,40 +124,49 @@ void environment::randomAlgorithmExperiment(Filepath filepath) {
 		iterationResultsFile << "file name;iteration;iteration;total cost" << std::endl;
 
 		while (!experimentFile.eof()) {
-			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
-
-			averageError = 0.0;
-			averageTime = 0.0;
-			averageSolution = 0.0;
-
-			for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
-				start = read_QPC(); // Start tracking time.
-				randomCVRP.generateASolution(instanceFile, iterationResultsFile, i, rnd);
-				elapsed = read_QPC() - start; // Stop tracking time.
-				// After the algorithm is over, save the results to a file.
-				averageError += ((randomCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double) instanceFile.getOptimalValue());
-				averageTime += (elapsed / (double) frequency);
-				averageSolution += randomCVRP.getTotalCost();
-
-				if (randomCVRP.getTotalCost() < overallBestSolutionFound) {
-					overallBestSolutionFound = randomCVRP.getTotalCost();
-					bestFoundRoutePath = randomCVRP.getPointOrder();
-				}
-			}
-
-			averageError = averageError / (double) instanceRepeats;
-			averageTime = averageTime / (double) instanceRepeats;
-			averageSolution = averageSolution / (double) instanceRepeats;
-
-			testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
-				<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
+			this->randomAlgorithmInstanceFileRepetitions(filepath, randomCVRP, iterationResultsFile, rnd);
 		}
+	}
+	else { // If any of the files can't be reached/the directory doesn't exist.
+		this->geneticOrRandomAlgorithmFileOpenError(filepath, iterationResultsFile);
 	}
 
 	experimentFile.close(); // Close input and output files.
 	testResultsFile.close();
 	iterationResultsFile.close();
+}
+
+// A full set of repetitions of the randomCVRP algorithm for one instance file.
+// Amount of repetitions is defined by the instanceRepeats value in the experiment file.
+void environment::randomAlgorithmInstanceFileRepetitions(Filepath filepath, randomCVRP &randomCVRP, std::ofstream &iterationResultsFile, unsigned rnd) {
+	experimentFile >> instanceFileName >> instanceRepeats;
+	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
+
+	averageError = 0.0;
+	averageTime = 0.0;
+	averageSolution = 0.0;
+
+	for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
+		start = read_QPC(); // Start tracking time.
+		randomCVRP.generateASolution(instanceFile, iterationResultsFile, i, rnd);
+		elapsed = read_QPC() - start; // Stop tracking time.
+		// After the algorithm is over, save the results to a file.
+		averageError += ((randomCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+		averageTime += (elapsed / (double)frequency);
+		averageSolution += randomCVRP.getTotalCost();
+
+		if (randomCVRP.getTotalCost() < overallBestSolutionFound) {
+			overallBestSolutionFound = randomCVRP.getTotalCost();
+			bestFoundRoutePath = randomCVRP.getStringifiedPointOrder();
+		}
+	}
+
+	averageError = averageError / (double)instanceRepeats;
+	averageTime = averageTime / (double)instanceRepeats;
+	averageSolution = averageSolution / (double)instanceRepeats;
+
+	testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
+		<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
 }
 
 // Open a file with the instances and solve them using greedy algorithm.
@@ -164,26 +186,49 @@ void environment::greedyAlgorithmExperiment(Filepath filepath) {
 		testResultsFile << "instance file;best known route cost;found route cost;found route path;error;time [s]" << std::endl;
 
 		while (!experimentFile.eof()) {
-			experimentFile >> instanceFileName >> instanceRepeats;
-			instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
-
-			overallBestSolutionFound = INT_MAX;
-
-			averageError = 0.0;
-			averageTime = 0.0;
-
-			start = read_QPC(); // Start tracking time.
-			greedyCVRP.generateASolution(instanceFile);
-			elapsed = read_QPC() - start; // Stop tracking time.
-
-			averageError = ((greedyCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double) instanceFile.getOptimalValue());
-			averageTime = (elapsed / (double) frequency);
-
-			testResultsFile << instanceFileName << ";" << instanceFile.getOptimalValue() << ";" << greedyCVRP.getTotalCost() 
-				<< ";" << greedyCVRP.getPointOrder() << ";" << averageError * 100.00 << "%" << ";" << averageTime << std::endl;
+			greedyAlgorithmInstanceFileRepetitions(filepath, greedyCVRP);
 		}
+	}
+	else { // If any of the files can't be reached/the directory doesn't exist.
+		this->greedyAlgorithmFileOpenError(filepath);
 	}
 
 	experimentFile.close(); // Close input and output files.
 	testResultsFile.close();
+}
+
+// Print out error messages to mark files which couldn't be properly opened.
+// Mandatory to pass ofstream as an argument using a reference, as it has no copy constructor.
+// Greedy algorithm only.
+void environment::greedyAlgorithmFileOpenError(Filepath filepath) {
+	if (!experimentFile.is_open()) {
+		std::cout << "Initialisation file " << filepath.getInitialisationFile() << " couldn't be opened." << std::endl;
+	}
+
+	if (!testResultsFile.is_open()) {
+		std::cout << "Output file " << filepath.getOutputFile() << " couldn't be created or opened." << std::endl;
+	}
+}
+
+// A full set of repetitions of the greedyCVRP algorithm for one instance file.
+// Amount of repetitions is defined by the instanceRepeats value in the experiment file.
+void environment::greedyAlgorithmInstanceFileRepetitions(Filepath filepath, greedyCVRP& greedyCVRP)
+{
+	experimentFile >> instanceFileName >> instanceRepeats;
+	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
+
+	overallBestSolutionFound = INT_MAX;
+
+	averageError = 0.0;
+	averageTime = 0.0;
+
+	start = read_QPC(); // Start tracking time.
+	greedyCVRP.generateASolution(instanceFile);
+	elapsed = read_QPC() - start; // Stop tracking time.
+
+	averageError = ((greedyCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+	averageTime = (elapsed / (double)frequency);
+
+	testResultsFile << instanceFileName << ";" << instanceFile.getOptimalValue() << ";" << greedyCVRP.getTotalCost()
+		<< ";" << greedyCVRP.getStringifiedPointOrder() << ";" << averageError * 100.00 << "%" << ";" << averageTime << std::endl;
 }

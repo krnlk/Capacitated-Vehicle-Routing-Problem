@@ -4,79 +4,88 @@
 
 #include "instanceFile.h"
 
+// Returns file name of this instance file.
 std::string instanceFile::getFileName()
 {
 	return this->fileName;
 }
 
+// Returns best known value of an cVRP algorithm for this instance file.
 int instanceFile::getOptimalValue()
 {
 	return this->optimalValue;
 }
 
+// Returns subroute's maximum capacity for this instance file.
 int instanceFile::getMaxCapacity()
 {
 	return this->maxCapacity;
 }
 
-// Load data of an instance file.
+// Open an instance file and load its data.
 void instanceFile::loadInstanceData(std::string path, std::string filename) {
 	std::ifstream instanceFile;
-	std::string textLine;
-	std::string textWord1, textWord2, textWord3;
-	int textNumber1, textNumber2, textNumber3;
-	point point;
 
 	fileName = filename;
 
 	instanceFile.open(path + filename);
 
-	if (instanceFile.is_open()) {
-			std::getline(instanceFile, textLine); // Skip unneeded info.
-
-			std::getline(instanceFile, textLine);
-			if (textLine.find("Optimal value: ") != -1) {
-				textLine = textLine.substr(textLine.find("Optimal value: ") + 15); // Trim out beginning of the line to get to optimal value;
-				if (textLine.find(")") != -1) textLine = textLine.erase(textLine.find(")"));
-				optimalValue = stoi(textLine); // Convert from string to integer.
-			}
-
-			std::getline(instanceFile, textLine); // Skip unneeded info.
-
-			std::getline(instanceFile, textLine);
-			textLine = textLine.substr(12); // 12 to remove "DIMENSION : ".
-			dimension = stoi(textLine); // Convert from string to integer.
-
-			std::getline(instanceFile, textLine); // Skip unneeded info.
-
-			std::getline(instanceFile, textLine);
-			textLine = textLine.substr(11); // 11 to remove "CAPACITY : ".
-			maxCapacity = stoi(textLine); // Convert from string to integer.
-
-			std::getline(instanceFile, textLine); // Skip unneeded info.
-
-			pointsVector.clear(); // Clear before filling.
-
-			for (int i = 0; i < dimension; i++) {
-				instanceFile >> textNumber1 >> textNumber2 >> textNumber3;
-				point.setPosition(textNumber2, textNumber3);
-				pointsVector.push_back(point);
-			}
-
-			std::getline(instanceFile, textLine); // Finish the previous line.
-			std::getline(instanceFile, textLine); // Skip unneeded info.
-
-			for (int i = 0; i < dimension; i++) {
-				instanceFile >> textNumber1 >> textNumber2;
-				pointsVector[i].setWeight(textNumber2);
-				pointsVector[i].setIndex(i);
-			}
-			instanceFile.close();
+	if (instanceFile.is_open()) { // If the instance file has been succesfully opened.
+		this->loadInstanceDataSuccess(instanceFile);
 	}
-	else { // If an instance file couldn't be found.
+	else { // If the instance file couldn't be found or opened.
 		std::cout << "Error - couldn't open the instance file " << filename << "." << std::endl;
 		std::cout << "Skipping ahead to the next instance file." << std::endl;
 	}
+}
+
+// Load data from an instance file, assuming a specific file structure.
+void instanceFile::loadInstanceDataSuccess(std::ifstream &instanceFile) {
+	std::string textLine;
+	std::string textWord1, textWord2, textWord3;
+	int textNumber1, textNumber2, textNumber3;
+	point point;
+
+	std::getline(instanceFile, textLine); // Skip unneeded info.
+
+	std::getline(instanceFile, textLine);
+	if (textLine.find("Optimal value: ") != -1) {
+		textLine = textLine.substr(textLine.find("Optimal value: ") + 15); // Trim out beginning of the line to get to optimal value;
+		if (textLine.find(")") != -1) textLine = textLine.erase(textLine.find(")"));
+		optimalValue = stoi(textLine); // Convert from string to integer.
+	}
+
+	std::getline(instanceFile, textLine); // Skip unneeded info.
+
+	std::getline(instanceFile, textLine);
+	textLine = textLine.substr(12); // 12 to remove "DIMENSION : ".
+	dimension = stoi(textLine); // Convert from string to integer.
+
+	std::getline(instanceFile, textLine); // Skip unneeded info.
+
+	std::getline(instanceFile, textLine);
+	textLine = textLine.substr(11); // 11 to remove "CAPACITY : ".
+	maxCapacity = stoi(textLine); // Convert from string to integer.
+
+	std::getline(instanceFile, textLine); // Skip unneeded info.
+
+	pointsVector.clear(); // Clear before filling.
+
+	for (int i = 0; i < dimension; i++) {
+		instanceFile >> textNumber1 >> textNumber2 >> textNumber3;
+		point.setPosition(textNumber2, textNumber3);
+		pointsVector.push_back(point);
+	}
+
+	std::getline(instanceFile, textLine); // Finish the previous line.
+	std::getline(instanceFile, textLine); // Skip unneeded info.
+
+	for (int i = 0; i < dimension; i++) {
+		instanceFile >> textNumber1 >> textNumber2;
+		pointsVector[i].setWeight(textNumber2);
+		pointsVector[i].setIndex(i);
+	}
+	instanceFile.close();
 }
 
 // Clear information about last read instance file's points.
@@ -84,8 +93,8 @@ void instanceFile::clearInstanceData() {
 	pointsVector.clear();
 }
 
-//TODO update
 // Print information about this instance file.
+// Mostly used for testing.
 void instanceFile::printInstanceData() {
 	std::cout << "Optimal value is: " << optimalValue << std::endl;
 	std::cout << "Maximum capacity per route is: " << maxCapacity << std::endl;

@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 
+// This class contains information about directories and file names of various input and output files needed by the application.
+// Although there are default settings in place, they are designed to be overriden by settings inside settingsFileName file
+// (unless such a file doesn't exist).
 class Filepath
 {
 	std::string settingsPath = ""; // Path to the settings file.
@@ -17,34 +20,37 @@ class Filepath
 	std::string generationResultsPath = "Results/GeneticGenerations/"; // (Genetic algorithm) Path to the output file for each generation.
 	std::string generationResultsFileName = "generationResults.txt"; // (Genetic algorithm) Name of the file containing experiment generation output.
 
+	void loadSettingsFileSuccess(std::fstream &settingsFile); // Load information from the settings file, assuming a specific format.
+	void loadSettingsFileError(); // Create a new settings file, open it, save default settings into it and then close it.
+
 public:
-	std::string getSettingsFile();
+	std::string getSettingsFile(); // Returns the relative directory of the settings file.
 
-	std::string getInitialisationPath();
-	std::string getInitialisationFileName();
-	std::string getInitialisationFile();
+	std::string getInitialisationPath(); // Returns the relative directory of the initialisation file.
+	std::string getInitialisationFileName(); // Returns the file name of the initialisation file.
+	std::string getInitialisationFile(); // Returns the relative directory and the file name of the initialisation file.
 
-	std::string getInstancesPath();
+	std::string getInstancesPath(); // Returns the relative directory where the instance files are located.
 
-	std::string getOutputPath();
-	std::string getOutputFileName();
-	std::string getOutputFile();
+	std::string getOutputPath(); // Returns the relative directory of the output file.
+	std::string getOutputFileName(); // Returns the file name of the output file.
+	std::string getOutputFile(); // Returns the relative directory and the file name of the output file.
 
-	std::string getGenerationResultsPath();
-	std::string getGenerationResultsFileName();
-	std::string getGenerationResultsFile();
+	std::string getGenerationResultsPath(); // Returns the relative directory of the generation results output file.
+	std::string getGenerationResultsFileName(); // Returns the file name of the generation results output file.
+	std::string getGenerationResultsFile(); // Returns the relative directory and the file name of the generation results output file.
 
-	void setInitialisationPath(std::string path);
-	void setInitialisationFileName(std::string fileName);
+	void setInitialisationPath(std::string path);// Sets the relative directory of the initialisation file.
+	void setInitialisationFileName(std::string fileName); // Sets the file name of the initialisation file.
 
-	void setInstancesPath(std::string path);
+	void setInstancesPath(std::string path); // Sets the relative directory where the instance files are located.
 
-	void setOutputPath(std::string path);
-	void setOutputFileName(std::string fileName);
+	void setOutputPath(std::string path); // Sets the relative directory of the output file.
+	void setOutputFileName(std::string fileName); // Sets the file name of the output file.
 
-	void setGenerationResultsPath(std::string path);
-	void setGenerationResultsFileName(std::string fileName);
+	void setGenerationResultsPath(std::string path); // Sets the relative directory of the generation results output file.
+	void setGenerationResultsFileName(std::string fileName); // Sets the relative directory of the generation results output file.
 
-	void loadSettingsFile();
+	void loadSettingsFile(); // Load the paths and names of files needed from a settings file. 
 };
 
