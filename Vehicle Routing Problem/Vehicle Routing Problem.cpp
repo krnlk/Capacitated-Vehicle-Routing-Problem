@@ -2,9 +2,9 @@
 
 #include "menu.h"
 
+// Main function of the program.
 int main()
 {
-	srand(time(NULL)); // Begin pseudo random number generation.
 	menu menu;
 	menu.startDialogue();
 }

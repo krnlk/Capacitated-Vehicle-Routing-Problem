@@ -3,16 +3,19 @@
 
 #include "specimen.h"
 #include "instanceFile.h"
+#include "pseudoRandomGeneration.h"
 
 // Mutation operator - swap.
 // Swap the order of two randomly selected points in this specimen.
 void specimen::mutateSwap(instanceFile instanceFile) {
     int index1, index2;
 
-    index1 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the first point. Don't swap first point (depot).
-    index2 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the second point. Don't swap first point (depot).
+    index1 = getRand(1, instanceFile.dimension - 1); // Randomly select index of the first point. Don't swap first point (depot).
+    index2 = getRand(1, instanceFile.dimension - 1); // Randomly select index of the second point. Don't swap first point (depot).
 
-    while (index1 == index2) index2 = rand() % (instanceFile.dimension - 1) + 1; // Make sure the swap doesn't happen between the same point.
+    while (index1 == index2) { // Make sure the swap doesn't happen between the same point.
+        index2 = getRand(1, instanceFile.dimension - 1); 
+    }
 
     std::swap(pointOrder[index1], pointOrder[index2]); // Swap order of points.
 }
@@ -22,12 +25,16 @@ void specimen::mutateSwap(instanceFile instanceFile) {
 void specimen::mutateInvert(instanceFile instanceFile) {
     int index1, index2;
 
-    index1 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the first point. Don't swap first point (depot).
-    index2 = rand() % (instanceFile.dimension - 1) + 1; // Randomly select index of the second point. Don't swap first point (depot).
+    index1 = getRand(1, instanceFile.dimension - 1); // Randomly select index of the first point. Don't swap first point (depot).
+    index2 = getRand(1, instanceFile.dimension - 1); // Randomly select index of the second point. Don't swap first point (depot).
 
-    while (index1 == index2) index2 = rand() % (instanceFile.dimension - 1) + 1; // Make sure the invert doesn't happen between the same point.
+    while (index1 == index2) { // Make sure the invert doesn't happen between the same point.
+        index2 = getRand(1, instanceFile.dimension - 1);
+    }
 
-    if (index1 > index2) std::swap(index1, index2); // index1 should be the earlier point on the route.
+    if (index1 > index2) { // index1 should be the earlier point on the route.
+        std::swap(index1, index2); 
+    }
 
     while (index1 < index2) { // Keep swapping points until the indexes "meet" each other.
         std::swap(pointOrder[index1], pointOrder[index2]);

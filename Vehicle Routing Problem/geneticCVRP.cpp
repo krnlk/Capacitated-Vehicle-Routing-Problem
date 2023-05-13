@@ -4,6 +4,7 @@
 
 #include "geneticCVRP.h"
 #include "specimen.h"
+#include "pseudoRandomGeneration.h"
 
 // Get the cost of the solution with the lowest found cost.
 int geneticCVRP::getBestFoundSolutionTotalCost()
@@ -187,7 +188,7 @@ void geneticCVRP::findWorstSpecimenInAGeneration(int index, int &currentGenerati
 // or by taking two of the randomly selected parents as the children outright.
 // This process is repeated until there are numberOfSpecimenInAGeneration specimen in the new generation.
 void geneticCVRP::createNewOffspring(instanceFile instanceFile) {
-	int probability = rand() % 100;
+	int probability = getRand(0, 99);
 
 	newGenerationOfSpecimen.clear(); // Clear the values.
 
@@ -199,7 +200,7 @@ void geneticCVRP::createNewOffspring(instanceFile instanceFile) {
 	{
 		std::pair<int, int> parentIndexes = selection(instanceFile);
 
-		probability = rand() % 100;
+		probability = getRand(0, 99);
 
 		if (probability / 100.0 < crossoverProbability) { // Produce two offspring from two parents using crossover.
 			selectCrossover(instanceFile, parentIndexes.first, parentIndexes.second);
@@ -276,7 +277,7 @@ int geneticCVRP::rankSelection(instanceFile instanceFile) {
 	int parentIndex = 0;
 	double totalRankSum = 0.0;
 
-	double probability = rand() % 10000;
+	double probability = getRand(0, 9999);
 	probability /= 10000.0;
 
 	while (parentIndex < numberOfSpecimenInAGeneration) {
@@ -292,9 +293,9 @@ int geneticCVRP::rankSelection(instanceFile instanceFile) {
 std::pair<int, int> geneticCVRP::randomSelection(instanceFile instanceFile) {
 	std::pair<int, int> parentIndexes;
 
-	parentIndexes.first = rand() % numberOfSpecimenInAGeneration; // Randomly select first parent.
+	parentIndexes.first = getRand(0, numberOfSpecimenInAGeneration - 1); // Randomly select first parent.
 	do {
-		parentIndexes.second = rand() % numberOfSpecimenInAGeneration; // Randomly select second parent.
+		parentIndexes.second = getRand(0, numberOfSpecimenInAGeneration - 1); // Randomly select second parent.
 	} while (parentIndexes.first == parentIndexes.second); // Make sure parents are different specimen.
 
 	return parentIndexes;
@@ -308,7 +309,7 @@ std::pair<int, int> geneticCVRP::stochasticUniversalSamplingIndexes(instanceFile
 	double totalSpecimenValueSum;
 
 	do {
-		firstProbability = (rand() % 10000) / 10000.0;
+		firstProbability = (getRand(0, 9999)) / 10000.0;
 		secondProbability = firstProbability >= 0.5 ? firstProbability - 0.5 : firstProbability + 0.5;
 
 		if (firstProbability > secondProbability) {
@@ -347,11 +348,11 @@ int geneticCVRP::tournamentSelection(instanceFile instanceFile) {
 	}
 
 	// First member of the tournament
-	parentIndex = rand() % numberOfSpecimenInAGeneration;
+	parentIndex = getRand(0, numberOfSpecimenInAGeneration - 1);
 	bestParticipantValue = allCurrentSpecimen[parentIndex].getTotalCost();
 
 	for (int i = 1; i < numberOfTournamentParticipants; i++) {
-		randomParticipantIndex = rand() % numberOfSpecimenInAGeneration;
+		randomParticipantIndex = getRand(0, numberOfSpecimenInAGeneration - 1);
 		if (allCurrentSpecimen[randomParticipantIndex].getTotalCost() < bestParticipantValue) {
 			bestParticipantValue = allCurrentSpecimen[randomParticipantIndex].getTotalCost();
 			parentIndex = randomParticipantIndex;
@@ -368,13 +369,13 @@ std::pair<int, int> geneticCVRP::rouletteWheelSelectionIndexes(instanceFile inst
 	double firstProbability, secondProbability;
 	double totalSpecimenValueSum;
 
-	firstProbability = (rand() % 10000) / 10000.0;
+	firstProbability = (getRand(0, 9999)) / 10000.0;
 
 	totalSpecimenValueSum = 0.0;
 
 	parentIndexes.first = rouletteWheelSelection(instanceFile, 0, totalSpecimenValueSum, firstProbability);
 	do {
-		firstProbability = (rand() % 10000) / 10000.0;
+		firstProbability = (getRand(0, 9999)) / 10000.0;
 		totalSpecimenValueSum = 0.0;
 		parentIndexes.second = rouletteWheelSelection(instanceFile, 0, totalSpecimenValueSum, firstProbability);
 	} while (parentIndexes.first == parentIndexes.second);
@@ -476,9 +477,9 @@ void geneticCVRP::cycleCrossover(instanceFile instanceFile, int firstParentIndex
 void geneticCVRP::orderedCrossoverCutoffsSetup(instanceFile instanceFile, int firstParentIndex, int secondParentIndex) {
 	int leftCutoff, rightCutoff; // Cutoffs are used to determine an allel.
 
-	leftCutoff = rand() % (instanceFile.dimension - 1) + 1; // Avoid leftCutoff value being 0.
+	leftCutoff = getRand(1, instanceFile.dimension - 1); // Avoid leftCutoff value being 0.
 	do {
-		rightCutoff = rand() % (instanceFile.dimension - 1) + 1;
+		rightCutoff = getRand(1, instanceFile.dimension - 1);
 	} while (rightCutoff == leftCutoff); // Make sure first and second cutoff are different values. 
 
 	if (leftCutoff > rightCutoff) std::swap(leftCutoff, rightCutoff); // Second cutoff should be a bigger value than the first cutoff.
@@ -543,9 +544,9 @@ specimen geneticCVRP::orderedCrossover(instanceFile instanceFile, int firstParen
 // Setting up cutoff points for partially mapped crossover selection.
 void geneticCVRP::partiallyMappedCrossoverCutoffsSetup(instanceFile instanceFile, int firstParentIndex, int secondParentIndex) {
 	int leftCutoff, rightCutoff; // Cutoffs are used to determine an allel.
-	leftCutoff = rand() % (instanceFile.dimension - 1) + 1; // Avoid leftCutoff value being 0.
+	leftCutoff = getRand(1, instanceFile.dimension - 1); // Avoid leftCutoff value being 0.
 	do {
-		rightCutoff = rand() % (instanceFile.dimension - 1) + 1;
+		rightCutoff = getRand(1, instanceFile.dimension - 1);
 	} while (rightCutoff == leftCutoff); // Make sure first and second cutoff are different values. 
 
 	if (leftCutoff > rightCutoff) {
@@ -615,7 +616,7 @@ void geneticCVRP::mutate(instanceFile instanceFile) {
 	int probability; // Determines whether a mutation will happen or not.
 	
 	for (int i = 0; i < numberOfSpecimenInAGeneration; i++) { // For each offspring.
-		probability = rand() % 100;
+		probability = getRand(0, 99);
 
 		if (probability / 100.0 < mutationProbability || allCurrentSpecimen[i].obligatoryMutation == true) { // If the specimen is a parent from previous generation, mutation will happen regardless of probability.
 			switch (mutationUsed) { // Select mutation to be used.
@@ -632,7 +633,6 @@ void geneticCVRP::mutate(instanceFile instanceFile) {
 			}
 		}
 	}
-
 }
 
 // Mutation that swaps two random points in a specimen. Repeats multiple times.
