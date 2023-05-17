@@ -3,20 +3,19 @@
   <ItemGroup>
     <ClCompile Include="test.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="greedyCVRPSolutionTest.cpp" />
-    <ClCompile Include="instanceFileTest.cpp" />
-    <ClCompile Include="menuTest.cpp" />
     <ClCompile Include="pointTest.cpp" />
-    <ClCompile Include="randomCVRPTest.cpp" />
+    <ClCompile Include="instanceFileTest.cpp" />
+    <ClCompile Include="environmentTest.cpp" />
+    <ClCompile Include="cVRPSolutionTest.cpp" />
     <ClCompile Include="specimenTest.cpp" />
+    <ClCompile Include="greedyCVRPTest.cpp" />
+    <ClCompile Include="randomCVRPTest.cpp" />
+    <ClCompile Include="geneticCVRPTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="P-n16-k8.vrp.txt" />
   </ItemGroup>
 </Project>

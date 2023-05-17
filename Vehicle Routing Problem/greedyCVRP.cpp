@@ -8,7 +8,6 @@
 // Generate a solution to an instance file using greedy cVRP algorithm.
 void greedyCVRP::generateASolution(instanceFile instanceFile) {
     instanceFile.calculateDistancesBetweenPoints();
-    unsigned rnd = 0; // Creates a random formula for shuffling.
 
     totalCost = 0; // Reset variables.
     pointOrder.clear();
@@ -36,7 +35,7 @@ void greedyCVRP::generateASolution(instanceFile instanceFile) {
 }
 
 // Skip initialisation data that's not needed in greedy algorithm.
-void greedyCVRP::ignoreInitialAlgorithmParameters(std::ifstream& experimentFile)
+void greedyCVRP::ignoreInitialAlgorithmParameters(std::ifstream &experimentFile)
 {
     std::string textLine;
 
@@ -66,6 +65,7 @@ void greedyCVRP::findNextPoint(instanceFile instanceFile) {
         currentCapacity = 0;
         findNextPoint(instanceFile);
     }
+
     else { // If a point that manages to meet capacity criteria has been found.
         pointOrder.push_back(lowestCostPoint); // Add it to the current subroute.
         currentPoint = lowestCostPoint;

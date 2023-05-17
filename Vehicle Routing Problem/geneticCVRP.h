@@ -34,7 +34,7 @@ class geneticCVRP
 	void analyseNewGeneration(instanceFile instanceFile, int generationNumber, std::ofstream &experimentResultsFile, int iteration); // Find best specimen in the new generation.
 
 	// Save information about average solution and potential new best solutions in this generation.
-	void findBestSpecimenInAGeneration(int index, instanceFile instanceFile, int &averageSolutionTotalCost, int& currentGenerationBestFoundSolutionTotalCost, int &bestSpecimenIndex, bool &newBestSpecimenFound); 
+	void findBestSpecimenInAGeneration(int index, instanceFile instanceFile, int &averageSolutionTotalCost, int &currentGenerationBestFoundSolutionTotalCost, int &bestSpecimenIndex, bool &newBestSpecimenFound); 
 
 	void findWorstSpecimenInAGeneration(int index, int &currentGenerationWorstFoundSolutionTotalCost); // Save information about worst total cost in this generation.
 

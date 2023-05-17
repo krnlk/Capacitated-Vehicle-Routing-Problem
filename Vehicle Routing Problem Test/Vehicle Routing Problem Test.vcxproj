@@ -36,11 +36,11 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cVRPSolutionTest.cpp" />
     <ClCompile Include="environmentTest.cpp" />
     <ClCompile Include="geneticCVRPTest.cpp" />
-    <ClCompile Include="greedyCVRPSolutionTest.cpp" />
+    <ClCompile Include="greedyCVRPTest.cpp" />
     <ClCompile Include="instanceFileTest.cpp" />
-    <ClCompile Include="menuTest.cpp" />
     <ClCompile Include="pointTest.cpp" />
     <ClCompile Include="randomCVRPTest.cpp" />
     <ClCompile Include="specimenTest.cpp" />
@@ -51,13 +51,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="cVRPSolutionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="P-n16-k8.vrp.txt" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "cVRPSolution.h"
+#include "pseudoRandomGeneration.h"
 
 // Get total cost of this solution.
 int cVRPSolution::getTotalCost() {
@@ -92,8 +93,13 @@ int cVRPSolution::calculateTotalCost(instanceFile instanceFile) {
 
     for (int i = 1; i < instanceFile.dimension; ) { // First point is a depot, therefore it's ignored. Visit all other points.
         if (currentCapacity + instanceFile.pointsVector[pointOrder[i]].getWeight() <= instanceFile.getMaxCapacity()) { // If there's capacity for the next point.
-            if (currentCapacity == 0) totalCost += instanceFile.distanceBetweenPoints[0][pointOrder[i]]; // Get distance between depot and first point on a new subroute.
-            else totalCost += instanceFile.distanceBetweenPoints[pointOrder[i - 1]][pointOrder[i]]; // Get distance between previous point and current point in a subroute.
+            if (currentCapacity == 0) {
+                totalCost += instanceFile.distanceBetweenPoints[0][pointOrder[i]]; // Get distance between depot and first point on a new subroute.
+            }
+
+            else {
+                totalCost += instanceFile.distanceBetweenPoints[pointOrder[i - 1]][pointOrder[i]]; // Get distance between previous point and current point in a subroute.
+            }
 
             currentCapacity += instanceFile.pointsVector[pointOrder[i]].getWeight(); // Increase capacity for current point.
             i++;
@@ -113,7 +119,7 @@ int cVRPSolution::calculateTotalCost(instanceFile instanceFile) {
 
 // Generate a random route by shuffling the order of points around.
 void cVRPSolution::generateRandomRoute(instanceFile instanceFile, std::vector<int>& pointOrder) {
-    unsigned rnd = 0; // Creates a random formula for shuffling. //TODO maybe move it to calling function from specimen.cpp, since there's a new seed being initialised each time?
+    unsigned rnd = time(NULL) * getRand(0, 9999); // Creates a random formula for shuffling.
 
     std::shuffle(pointOrder.begin() + 1, pointOrder.end(), std::default_random_engine(rnd)); // Shuffle the order of points on a route (don't shuffle depot).
 

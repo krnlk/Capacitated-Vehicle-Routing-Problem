@@ -11,6 +11,8 @@ class instanceFile
 	int optimalValue; // Best known value of the cVRP solution for this instance file.
 	int maxCapacity; // Subroute's maximum capacity for this instance file.
 
+	void loadInstanceDataSuccess(std::ifstream& instanceFile); // Load data from an instance file, assuming a specific file structure.
+
 public:
 	int dimension; // Number of points in this instance file (including depot).
 	std::vector<point> pointsVector; // Vector of objects represeting instance file points.
@@ -21,7 +23,6 @@ public:
 	int getMaxCapacity(); // Returns subroute's maximum capacity for this instance file.
 
 	void loadInstanceData(std::string path, std::string filename); // Open an instance file and load its data.
-	void loadInstanceDataSuccess(std::ifstream &instanceFile); // Load data from an instance file, assuming a specific file structure.
 
 	void clearInstanceData(); // Clear information about last read instance file's points.
 	void printInstanceData(); // Print information about this instance file. Mostly used for testing.

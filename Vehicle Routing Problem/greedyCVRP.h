@@ -13,6 +13,6 @@ class greedyCVRP : public cVRPSolution
 
 	public:
 		void generateASolution(instanceFile instanceFile); // Generate a solution to an instance file using greedy cVRP algorithm.
-		void ignoreInitialAlgorithmParameters(std::ifstream& experimentFile); // Skip initialisation data that's not needed in greedy algorithm.
+		void ignoreInitialAlgorithmParameters(std::ifstream &experimentFile); // Skip initialisation data that's not needed in greedy algorithm.
 };
 

@@ -1,6 +1,5 @@
 #pragma once
 #include <list>
-
 #include "instanceFile.h"
 
 // This class represents a solution in the cVRP in its most basic form.

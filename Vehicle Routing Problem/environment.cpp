@@ -7,6 +7,7 @@
 #include "greedyCVRP.h"
 #include "randomCVRP.h"
 #include "Filepath.h"
+#include "pseudoRandomGeneration.h"
 
 // Used for tracking time.
 long long int read_QPC() 
@@ -109,7 +110,7 @@ void environment::geneticOrRandomAlgorithmFileOpenError(Filepath filepath, std::
 void environment::randomAlgorithmExperiment(Filepath filepath) {
 	randomCVRP randomCVRP;
 	std::ofstream iterationResultsFile;
-	unsigned rnd = 0; // Create a random formula for shuffling.
+	unsigned rnd = time(NULL) * getRand(0, 9999); // Create a random formula for shuffling.
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 

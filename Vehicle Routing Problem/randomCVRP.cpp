@@ -7,7 +7,7 @@
 // Generate a solution by pseudorandomly selecting a point that isn't on the route yet and adding it to the route.
 // Each point is equally likely to be selected (ignoring pseudorandom aspects).
 // The process concludes when all points have been added to a route.
-void randomCVRP::generateASolution(instanceFile instanceFile, std::ofstream& experimentResultsFile, int iteration, int rnd) {
+void randomCVRP::generateASolution(instanceFile instanceFile, std::ofstream &experimentResultsFile, int iteration, int rnd) {
 	instanceFile.calculateDistancesBetweenPoints(); // Set up distances between points.
 
 	totalCost = 0;
