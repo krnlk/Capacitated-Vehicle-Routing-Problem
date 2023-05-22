@@ -61,7 +61,6 @@ class geneticCVRP
 
 	void cycleCrossover(instanceFile instanceFile, int firstParentIndex, int secondParentIndex); // Generate offsping by using cycles between two parents.
 
-	void orderedCrossoverCutoffsSetup(instanceFile instanceFile, int firstParentIndex, int secondParentIndex); // Setting up cutoff points for ordered crossover selection.
 	specimen orderedCrossover(instanceFile instanceFile, int firstParentIndex, int secondParentIndex, int leftCutoff, int rightCutoff); // Generate offspring by using ordered crossover.
 
 	void partiallyMappedCrossoverCutoffsSetup(instanceFile instanceFile, int firstParentIndex, int secondParentIndex); // Setting up cutoff points for partially mapped crossover selection.
@@ -70,8 +69,8 @@ class geneticCVRP
 	int findValueInsideParent(int valueIndex, int firstParentIndex, int secondParentIndex, int leftCutoff, int rightCutoff, int recursion); // Return the index where a value resides inside a parent.
 
 	void mutate(instanceFile instanceFile); // Handle mutation of all offspring in new generation.
-	void mutateSwap(instanceFile instanceFile, int specimenIndex); // Mutation that swaps two random points in a specimen. Repeats multiple times.
-	void mutateInvert(instanceFile instanceFile, int specimenIndex); // Mutation that swaps all points between two points in a route. Only one mutation is performed per specimen.
+	void mutateSwapOnSpecimen(instanceFile instanceFile, int specimenIndex); // Mutation that swaps two random points in a specimen. Repeats multiple times.
+	void mutateInvertOnSpecimen(instanceFile instanceFile, int specimenIndex); // Mutation that swaps all points between two points in a route. Only one mutation is performed per specimen.
 	
 public:
 	int getBestFoundSolutionTotalCost(); // Get the cost of the solution with the lowest found cost.
