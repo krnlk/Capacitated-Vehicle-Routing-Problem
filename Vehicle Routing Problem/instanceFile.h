@@ -32,4 +32,3 @@ public:
 
 	void printDistancesBetweenPoints(); // For testing purposes only.
 };
-

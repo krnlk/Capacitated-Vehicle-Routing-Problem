@@ -21,7 +21,7 @@ long long int read_QPC()
 // The files are loaded one after another - when all the iterations of an algorithm for an instance are finished,
 // then and only then will the new instance file be loaded.
 void environment::geneticAlgorithmExperiment(Filepath filepath) {
-	geneticCVRP geneticCVRP;
+	geneticIOData geneticIOData;
 	std::ofstream generationResultsFile;
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency); 
@@ -31,13 +31,13 @@ void environment::geneticAlgorithmExperiment(Filepath filepath) {
 	generationResultsFile.open(filepath.getGenerationResultsFile());
 
 	if (experimentFile.is_open() && testResultsFile.is_open() && generationResultsFile.is_open()) { // If all files have been opened succesfully.
-		geneticCVRP.setAlgorithmParameters(experimentFile); // Sets algorithm parameters for the experiment.
+		geneticIOData.setAlgorithmParameters(experimentFile); // Sets algorithm parameters for the experiment.
 
 		testResultsFile << "instance file;instance repeats;best known route cost;best found route cost;best found route path;average error;average time [s];average best solution" << std::endl;
 		generationResultsFile << "file name;iteration;generation;minimum specimen cost so far;maximum specimen cost so far;average specimen cost;minimum specimen cost this generation; maximum specimen cost this generation" << std::endl;
 
 		while (!experimentFile.eof()) {
-			this->geneticAlgorithmInstanceFileRepetitions(filepath, geneticCVRP, generationResultsFile);
+			this->geneticAlgorithmInstanceFileRepetitions(filepath, geneticIOData, generationResultsFile);
 		}
 	}
 	else { // If any of the files can't be reached/the directory doesn't exist.
@@ -51,9 +51,10 @@ void environment::geneticAlgorithmExperiment(Filepath filepath) {
 
 // A full set of repetitions of the geneticCVRP algorithm for one instance file.
 // Amount of repetitions is defined by the instanceRepeats value in the experiment file.
-void environment::geneticAlgorithmInstanceFileRepetitions(Filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile) {
+void environment::geneticAlgorithmInstanceFileRepetitions(Filepath filepath, geneticIOData &geneticIOData, std::ofstream &generationResultsFile) {
 	experimentFile >> instanceFileName >> instanceRepeats;
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
+	geneticIOData.setInstanceFile(instanceFile);
 
 	overallBestSolutionFound = INT_MAX;
 
@@ -62,18 +63,18 @@ void environment::geneticAlgorithmInstanceFileRepetitions(Filepath filepath, gen
 	averageSolution = 0.0;
 
 	for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
-		geneticCVRP.clearInfo(); // Clear best found solution and its order from the previous run.
+		geneticIOData.clearInfo(); // Clear best found solution and its order from the previous run.
 		start = read_QPC(); // Start tracking time.
-		geneticCVRP.mainAlgorithmLoop(instanceFile, generationResultsFile, i + 1);
+		geneticIOData.mainAlgorithmLoop(generationResultsFile, i + 1);
 		elapsed = read_QPC() - start; // Stop tracking time.
 		// After the algorithm is over, save the results to a file.
-		averageError += ((geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+		averageError += ((geneticIOData.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
 		averageTime += (elapsed / (double)frequency);
-		averageSolution += geneticCVRP.getBestFoundSolutionTotalCost();
+		averageSolution += geneticIOData.getBestFoundSolutionTotalCost();
 
-		if (geneticCVRP.getBestFoundSolutionTotalCost() < overallBestSolutionFound) {
-			overallBestSolutionFound = geneticCVRP.getBestFoundSolutionTotalCost();
-			bestFoundRoutePath = geneticCVRP.getBestFoundSolutionPointOrder();
+		if (geneticIOData.getBestFoundSolutionTotalCost() < overallBestSolutionFound) {
+			overallBestSolutionFound = geneticIOData.getBestFoundSolutionTotalCost();
+			bestFoundRoutePath = geneticIOData.getBestFoundSolutionPointOrder();
 		}
 
 		std::cout << "Iteration number " << i + 1 << " of instance file " << instanceFileName << " has finished." << std::endl;

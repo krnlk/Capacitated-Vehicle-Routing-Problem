@@ -143,6 +143,8 @@
     <ClCompile Include="Filepath.cpp" />
     <ClCompile Include="geneticCVRP.cpp" />
     <ClCompile Include="environment.cpp" />
+    <ClCompile Include="geneticIOData.cpp" />
+    <ClCompile Include="geneticParameters.cpp" />
     <ClCompile Include="greedyCVRP.cpp" />
     <ClCompile Include="instanceFile.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -157,6 +159,8 @@
     <ClInclude Include="Filepath.h" />
     <ClInclude Include="geneticCVRP.h" />
     <ClInclude Include="environment.h" />
+    <ClInclude Include="geneticIOData.h" />
+    <ClInclude Include="geneticParameters.h" />
     <ClInclude Include="greedyCVRP.h" />
     <ClInclude Include="instanceFile.h" />
     <ClInclude Include="menu.h" />

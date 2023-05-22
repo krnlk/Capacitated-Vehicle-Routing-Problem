@@ -4,7 +4,7 @@
 
 #include "instanceFile.h"
 #include "Filepath.h"
-#include "geneticCVRP.h"
+#include "geneticIOData.h"
 #include "randomCVRP.h"
 #include "greedyCVRP.h"
 
@@ -32,7 +32,7 @@ class environment
 					  // and the best known optimal value, across all repetitions of an instance file.
 
 	void geneticOrRandomAlgorithmFileOpenError(Filepath filepath, std::ofstream &generationResultsFile); // (Genetic & random algorithms) Print out error messages to mark files which couldn't be properly opened.
-	void geneticAlgorithmInstanceFileRepetitions(Filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile); // A full set of repetitions of the geneticCVRP algorithm for one instance file.
+	void geneticAlgorithmInstanceFileRepetitions(Filepath filepath, geneticIOData &geneticIOData, std::ofstream &generationResultsFile); // A full set of repetitions of the geneticCVRP algorithm for one instance file.
 
 	void randomAlgorithmInstanceFileRepetitions(Filepath filepath, randomCVRP &randomCVRP, std::ofstream &generationResultsFile, unsigned rnd); // A full set of repetitions of the randomCVRP algorithm for one instance file.
 
