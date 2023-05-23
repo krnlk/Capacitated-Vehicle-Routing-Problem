@@ -11,9 +11,14 @@
     <ClCompile Include="greedyCVRPTest.cpp" />
     <ClCompile Include="randomCVRPTest.cpp" />
     <ClCompile Include="geneticCVRPTest.cpp" />
+    <ClCompile Include="geneticCVRP.cpp" />
+    <ClCompile Include="geneticCVRPTestMutation.cpp" />
+    <ClCompile Include="geneticCVRPTestCrossover.cpp" />
+    <ClCompile Include="geneticCVRPTestSelection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="geneticCVRP.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

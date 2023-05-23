@@ -20,7 +20,7 @@ long long int read_QPC()
 // Open a file with the instances and solve them using genetic algorithm.
 // The files are loaded one after another - when all the iterations of an algorithm for an instance are finished,
 // then and only then will the new instance file be loaded.
-void environment::geneticAlgorithmExperiment(Filepath filepath) {
+void environment::geneticAlgorithmExperiment(filepath filepath) {
 	geneticCVRP geneticCVRP;
 	std::ofstream generationResultsFile;
 
@@ -51,9 +51,10 @@ void environment::geneticAlgorithmExperiment(Filepath filepath) {
 
 // A full set of repetitions of the geneticCVRP algorithm for one instance file.
 // Amount of repetitions is defined by the instanceRepeats value in the experiment file.
-void environment::geneticAlgorithmInstanceFileRepetitions(Filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile) {
+void environment::geneticAlgorithmInstanceFileRepetitions(filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile) {
 	experimentFile >> instanceFileName >> instanceRepeats;
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
+	geneticCVRP.setInstanceFile(instanceFile); // Set file used by algorithm.
 
 	overallBestSolutionFound = INT_MAX;
 
@@ -64,7 +65,7 @@ void environment::geneticAlgorithmInstanceFileRepetitions(Filepath filepath, gen
 	for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
 		geneticCVRP.clearInfo(); // Clear best found solution and its order from the previous run.
 		start = read_QPC(); // Start tracking time.
-		geneticCVRP.mainAlgorithmLoop(instanceFile, generationResultsFile, i + 1);
+		geneticCVRP.mainAlgorithmLoop(generationResultsFile, i + 1);
 		elapsed = read_QPC() - start; // Stop tracking time.
 		// After the algorithm is over, save the results to a file.
 		averageError += ((geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
@@ -90,7 +91,7 @@ void environment::geneticAlgorithmInstanceFileRepetitions(Filepath filepath, gen
 // Print out error messages to mark files which couldn't be properly opened.
 // Mandatory to pass ofstream as an argument using a reference, as it has no copy constructor.
 // Genetic and random algorithms only.
-void environment::geneticOrRandomAlgorithmFileOpenError(Filepath filepath, std::ofstream &generationResultsFile) {
+void environment::geneticOrRandomAlgorithmFileOpenError(filepath filepath, std::ofstream &generationResultsFile) {
 	if (!experimentFile.is_open()) {
 		std::cout << "Initialisation file " << filepath.getInitialisationFile() << " couldn't be opened." << std::endl;
 	}
@@ -107,7 +108,7 @@ void environment::geneticOrRandomAlgorithmFileOpenError(Filepath filepath, std::
 // Open a file with the instances and solve them using a basic pseudorandom algorithm.
 // The files are loaded one after another - when all the iterations of an algorithm for an instance are finished,
 // then and only then will the new instance file be loaded.
-void environment::randomAlgorithmExperiment(Filepath filepath) {
+void environment::randomAlgorithmExperiment(filepath filepath) {
 	randomCVRP randomCVRP;
 	std::ofstream iterationResultsFile;
 	unsigned rnd = time(NULL) * getRand(0, 9999); // Create a random formula for shuffling.
@@ -139,7 +140,7 @@ void environment::randomAlgorithmExperiment(Filepath filepath) {
 
 // A full set of repetitions of the randomCVRP algorithm for one instance file.
 // Amount of repetitions is defined by the instanceRepeats value in the experiment file.
-void environment::randomAlgorithmInstanceFileRepetitions(Filepath filepath, randomCVRP &randomCVRP, std::ofstream &iterationResultsFile, unsigned rnd) {
+void environment::randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP &randomCVRP, std::ofstream &iterationResultsFile, unsigned rnd) {
 	experimentFile >> instanceFileName >> instanceRepeats;
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
 
@@ -173,7 +174,7 @@ void environment::randomAlgorithmInstanceFileRepetitions(Filepath filepath, rand
 // Open a file with the instances and solve them using greedy algorithm.
 // The files are loaded one after another - when all the iterations of an algorithm for an instance are finished,
 // then and only then will the new instance file be loaded.
-void environment::greedyAlgorithmExperiment(Filepath filepath) {
+void environment::greedyAlgorithmExperiment(filepath filepath) {
 	greedyCVRP greedyCVRP;
 
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
@@ -201,7 +202,7 @@ void environment::greedyAlgorithmExperiment(Filepath filepath) {
 // Print out error messages to mark files which couldn't be properly opened.
 // Mandatory to pass ofstream as an argument using a reference, as it has no copy constructor.
 // Greedy algorithm only.
-void environment::greedyAlgorithmFileOpenError(Filepath filepath) {
+void environment::greedyAlgorithmFileOpenError(filepath filepath) {
 	if (!experimentFile.is_open()) {
 		std::cout << "Initialisation file " << filepath.getInitialisationFile() << " couldn't be opened." << std::endl;
 	}
@@ -213,7 +214,7 @@ void environment::greedyAlgorithmFileOpenError(Filepath filepath) {
 
 // A full set of repetitions of the greedyCVRP algorithm for one instance file.
 // Amount of repetitions is defined by the instanceRepeats value in the experiment file.
-void environment::greedyAlgorithmInstanceFileRepetitions(Filepath filepath, greedyCVRP& greedyCVRP)
+void environment::greedyAlgorithmInstanceFileRepetitions(filepath filepath, greedyCVRP& greedyCVRP)
 {
 	experimentFile >> instanceFileName >> instanceRepeats;
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);

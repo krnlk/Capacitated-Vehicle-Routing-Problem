@@ -33,12 +33,17 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClInclude Include="geneticCVRP.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cVRPSolutionTest.cpp" />
     <ClCompile Include="environmentTest.cpp" />
+    <ClCompile Include="geneticCVRP.cpp" />
+    <ClCompile Include="geneticCVRPTestCrossover.cpp" />
+    <ClCompile Include="geneticCVRPTestMutation.cpp" />
     <ClCompile Include="geneticCVRPTest.cpp" />
+    <ClCompile Include="geneticCVRPTestSelection.cpp" />
     <ClCompile Include="greedyCVRPTest.cpp" />
     <ClCompile Include="instanceFileTest.cpp" />
     <ClCompile Include="pointTest.cpp" />

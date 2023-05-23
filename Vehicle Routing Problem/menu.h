@@ -7,7 +7,7 @@
 // This class serves as a user interface that is used to access other features of the application.
 class menu
 {
-	Filepath filepath; // Used to store data about setting files & paths leading to them.
+	filepath filepath; // Used to store data about setting files & paths leading to them.
 	environment environment; // Used to store data of each experiment.
 
 	char userInput; // Character used as user input to select options from the menu.

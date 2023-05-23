@@ -4,7 +4,7 @@
 // This class contains information about directories and file names of various input and output files needed by the application.
 // Although there are default settings in place, they are designed to be overriden by settings inside settingsFileName file
 // (unless such a file doesn't exist).
-class Filepath
+class filepath
 {
 	std::string settingsPath = ""; // Path to the settings file.
 	std::string settingsFileName = "settings.ini"; // Name of the file where earlier experiment file names are stored.

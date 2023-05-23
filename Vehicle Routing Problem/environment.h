@@ -31,19 +31,19 @@ class environment
 	double bestError; // Smallest found difference between the best found solution value of an instance file
 					  // and the best known optimal value, across all repetitions of an instance file.
 
-	void geneticOrRandomAlgorithmFileOpenError(Filepath filepath, std::ofstream &generationResultsFile); // (Genetic & random algorithms) Print out error messages to mark files which couldn't be properly opened.
-	void geneticAlgorithmInstanceFileRepetitions(Filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile); // A full set of repetitions of the geneticCVRP algorithm for one instance file.
+	void geneticOrRandomAlgorithmFileOpenError(filepath filepath, std::ofstream &generationResultsFile); // (Genetic & random algorithms) Print out error messages to mark files which couldn't be properly opened.
+	void geneticAlgorithmInstanceFileRepetitions(filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile); // A full set of repetitions of the geneticCVRP algorithm for one instance file.
 
-	void randomAlgorithmInstanceFileRepetitions(Filepath filepath, randomCVRP &randomCVRP, std::ofstream &generationResultsFile, unsigned rnd); // A full set of repetitions of the randomCVRP algorithm for one instance file.
+	void randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP &randomCVRP, std::ofstream &generationResultsFile, unsigned rnd); // A full set of repetitions of the randomCVRP algorithm for one instance file.
 
-	void greedyAlgorithmFileOpenError(Filepath filepath); // (Greedy algorithm) Print out error messages to mark files which couldn't be properly opened.
-	void greedyAlgorithmInstanceFileRepetitions(Filepath filepath, greedyCVRP &greedyCVRP); // A full set of repetitions of the greedyCVRP algorithm for one instance file.
+	void greedyAlgorithmFileOpenError(filepath filepath); // (Greedy algorithm) Print out error messages to mark files which couldn't be properly opened.
+	void greedyAlgorithmInstanceFileRepetitions(filepath filepath, greedyCVRP &greedyCVRP); // A full set of repetitions of the greedyCVRP algorithm for one instance file.
 
 	public:
-		void geneticAlgorithmExperiment(Filepath filepath); // Run the experiment using a genetic algorithm.
+		void geneticAlgorithmExperiment(filepath filepath); // Run the experiment using a genetic algorithm.
 
-		void randomAlgorithmExperiment(Filepath filepath); // Run the experiment using a random algorithm.
+		void randomAlgorithmExperiment(filepath filepath); // Run the experiment using a random algorithm.
 
-		void greedyAlgorithmExperiment(Filepath filepath); // Run the experiment using a greedy algorithm.
+		void greedyAlgorithmExperiment(filepath filepath); // Run the experiment using a greedy algorithm.
 };
 

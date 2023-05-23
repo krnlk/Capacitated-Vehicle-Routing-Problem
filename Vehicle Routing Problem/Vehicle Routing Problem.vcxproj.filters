@@ -45,7 +45,7 @@
     <ClCompile Include="cVRPSolution.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Filepath.cpp">
+    <ClCompile Include="filepath.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="pseudoRandomGeneration.cpp">
@@ -80,7 +80,7 @@
     <ClInclude Include="cVRPSolution.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Filepath.h">
+    <ClInclude Include="filepath.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="pseudoRandomGeneration.h">

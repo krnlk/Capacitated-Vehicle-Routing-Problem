@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cVRPSolution.cpp" />
-    <ClCompile Include="Filepath.cpp" />
+    <ClCompile Include="filepath.cpp" />
     <ClCompile Include="geneticCVRP.cpp" />
     <ClCompile Include="environment.cpp" />
     <ClCompile Include="greedyCVRP.cpp" />
@@ -154,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cVRPSolution.h" />
-    <ClInclude Include="Filepath.h" />
+    <ClInclude Include="filepath.h" />
     <ClInclude Include="geneticCVRP.h" />
     <ClInclude Include="environment.h" />
     <ClInclude Include="greedyCVRP.h" />

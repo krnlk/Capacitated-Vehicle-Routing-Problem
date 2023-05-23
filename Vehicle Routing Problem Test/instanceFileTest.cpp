@@ -83,7 +83,7 @@ protected:
 
 	instanceFile instanceFile;
 	specimen specimen;
-	Filepath filepath;
+	filepath filepath;
 };
 
 TEST_F(InstanceFileReadTest, sampleRoute1Distances) {

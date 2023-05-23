@@ -4,116 +4,116 @@
 #include "Filepath.h"
 
 // Returns the relative directory and the file name of the settings file.
-std::string Filepath::getSettingsFile()
+std::string filepath::getSettingsFile()
 {
 	return this->settingsPath + this->settingsFileName;
 }
 
 // Returns the relative directory of the initialisation file.
-std::string Filepath::getInitialisationPath()
+std::string filepath::getInitialisationPath()
 {
 	return this->initialisationPath;
 }
 
 // Returns the file name of the initialisation file.
-std::string Filepath::getInitialisationFileName()
+std::string filepath::getInitialisationFileName()
 {
 	return this->initialisationFileName;
 }
 
 // Returns the relative directory and the file name of the initialisation file.
-std::string Filepath::getInitialisationFile()
+std::string filepath::getInitialisationFile()
 {
 	return this->initialisationPath + this->initialisationFileName;
 }
 
 // Returns the relative directory where the instance files are located.
-std::string Filepath::getInstancesPath()
+std::string filepath::getInstancesPath()
 {
 	return this->instancesPath;
 }
 
 // Returns the relative directory of the output file.
-std::string Filepath::getOutputPath()
+std::string filepath::getOutputPath()
 {
 	return this->outputPath;
 }
 
 // Returns the file name of the output file.
-std::string Filepath::getOutputFileName()
+std::string filepath::getOutputFileName()
 {
 	return this->outputFileName;
 }
 
 // Returns the relative directory and the file name of the output file.
-std::string Filepath::getOutputFile()
+std::string filepath::getOutputFile()
 {
 	return this->outputPath + this->outputFileName;
 }
 
 // Returns the relative directory of the generation results output file.
-std::string Filepath::getGenerationResultsPath()
+std::string filepath::getGenerationResultsPath()
 {
 	return this->generationResultsPath;
 }
 
 // Returns the file name of the generation results output file.
-std::string Filepath::getGenerationResultsFileName()
+std::string filepath::getGenerationResultsFileName()
 {
 	return this->generationResultsFileName;
 }
 
 // Returns the relative directory and the file name of the generation results output file.
-std::string Filepath::getGenerationResultsFile()
+std::string filepath::getGenerationResultsFile()
 {
 	return this->generationResultsPath + this->generationResultsFileName;
 }
 
 // Sets the relative directory of the initialisation file.
-void Filepath::setInitialisationPath(std::string path)
+void filepath::setInitialisationPath(std::string path)
 {
 	this->initialisationPath = path;
 }
 
 // Sets the file name of the initialisation file.
-void Filepath::setInitialisationFileName(std::string fileName)
+void filepath::setInitialisationFileName(std::string fileName)
 {
 	this->initialisationFileName = fileName;
 }
 
 // Sets the relative directory where the instance files are located.
-void Filepath::setInstancesPath(std::string path)
+void filepath::setInstancesPath(std::string path)
 {
 	this->instancesPath = path;
 }
 
 // Sets the relative directory of the output file.
-void Filepath::setOutputPath(std::string path)
+void filepath::setOutputPath(std::string path)
 {
 	this->outputPath = path;
 }
 
 // Sets the file name of the output file.
-void Filepath::setOutputFileName(std::string fileName)
+void filepath::setOutputFileName(std::string fileName)
 {
 	this->outputFileName = fileName;
 }
 
 // Sets the relative directory of the generation results output file.
-void Filepath::setGenerationResultsPath(std::string path)
+void filepath::setGenerationResultsPath(std::string path)
 {
 	this->generationResultsPath = path;
 }
 
 // Sets the relative directory of the generation results output file.
-void Filepath::setGenerationResultsFileName(std::string fileName)
+void filepath::setGenerationResultsFileName(std::string fileName)
 {
 	this->generationResultsFileName = fileName;
 }
 
 // Load the paths and names of files needed from a settings file. 
 // If no such file exists, create it and instantiate it with default settings found in this class.
-void Filepath::loadSettingsFile()
+void filepath::loadSettingsFile()
 {
 	std::fstream settingsFile;
 
@@ -128,7 +128,7 @@ void Filepath::loadSettingsFile()
 }
 
 // Load information from the settings file, assuming a specific format.
-void Filepath::loadSettingsFileSuccess(std::fstream &settingsFile) {
+void filepath::loadSettingsFileSuccess(std::fstream &settingsFile) {
 	std::getline(settingsFile, this->initialisationPath);
 	std::getline(settingsFile, this->initialisationFileName);
 	std::getline(settingsFile, this->instancesPath);
@@ -149,7 +149,7 @@ void Filepath::loadSettingsFileSuccess(std::fstream &settingsFile) {
 }
 
 // Create a new settings file, open it, save default settings into it and then close it.
-void Filepath::loadSettingsFileError() {
+void filepath::loadSettingsFileError() {
 	std::ofstream newSettingsFile; // Create a new settings file.
 	newSettingsFile.open(this->getSettingsFile()); 
 
