@@ -307,7 +307,8 @@ std::pair<int, int> geneticCVRP::stochasticUniversalSamplingIndexes() {
 	double totalSpecimenValueSum;
 
 	do {
-		firstProbability = (getRand(0, 9999)) / 10000.0;
+		firstProbability = (getRand(0, 9999)) / 10000.0; // "Spin a wheel".
+		// Take a probability directly opposite to the first one "on the wheel".
 		secondProbability = firstProbability >= 0.5 ? firstProbability - 0.5 : firstProbability + 0.5;
 
 		if (firstProbability > secondProbability) {
@@ -421,7 +422,7 @@ void geneticCVRP::selectCrossover(int firstParentIndex, int secondParentIndex) {
 // This crossover generates two offspring from two parents by finding cycles in parents, then copying cycle 1 from parent 1, cycle 2 from parent 2 etc.
 void geneticCVRP::cycleCrossover(int firstParentIndex, int secondParentIndex) {
 	std::vector<int> cycles; // Vector used for marking which point belongs to which cycle.
-	int pointsVisited = 1; // Depot is skipped.
+	int pointsVisited = 1; // Number of points that have been visited during crossover. Depot is skipped.
 	int currentPoint = 1; // Index of the point that's used to start a new cycle.
 	int nextPoint; // Next point in the cycle.
 	int firstPoint; // First point in a cycle - reaching it again will complete the cycle.
@@ -435,9 +436,12 @@ void geneticCVRP::cycleCrossover(int firstParentIndex, int secondParentIndex) {
 	}
 
 	while (pointsVisited < currentInstanceFile.dimension) { // Find all cycles. Don't visit the depot.
-		while (cycles[currentPoint] != -1) currentPoint++; // Increment currentPoint until the new current point hasn't been a part of any previous cycle.
-		cycles[currentPoint] = currentCycle;
-		nextPoint = allCurrentSpecimen[secondParentIndex].getPointByIndex(currentPoint); // Drop down.
+		while (cycles[currentPoint] != -1) { // Increment currentPoint until the new current point hasn't been a part of any previous cycle.
+			currentPoint++;
+		}
+
+		cycles[currentPoint] = currentCycle; // Start a new cycle - current point hasn't been a part of any previous cycle.
+		nextPoint = allCurrentSpecimen[secondParentIndex].getPointByIndex(currentPoint); // Drop down to the second parent.
 		pointsVisited++;
 
 		while (nextPoint != allCurrentSpecimen[firstParentIndex].getPointByIndex(currentPoint)) { // Until the next point is found.

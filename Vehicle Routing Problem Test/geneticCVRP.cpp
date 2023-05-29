@@ -1,10 +1,12 @@
+#include "pch.h"
+
 #include <iostream>
 #include <sstream>
 #include <algorithm>
 
-#include "../Vehicle Routing Problem/geneticCVRP.h"
 #include "../Vehicle Routing Problem/specimen.h"
 #include "../Vehicle Routing Problem/pseudoRandomGeneration.h"
+#include "geneticCVRP.h"
 
 // Get the cost of the solution with the lowest found cost.
 int geneticCVRP::getBestFoundSolutionTotalCost()
@@ -26,7 +28,7 @@ std::string geneticCVRP::getBestFoundSolutionPointOrder() {
 }
 
 // Read algorithm parameters from a file (assuming specific format).
-void geneticCVRP::setAlgorithmParameters(std::ifstream &experimentFile)
+void geneticCVRP::setAlgorithmParameters(std::ifstream& experimentFile)
 {
 	std::string textLine;
 
@@ -57,12 +59,17 @@ void geneticCVRP::setAlgorithmParameters(std::ifstream &experimentFile)
 }
 
 // Update the information about the new best found solution.
-void geneticCVRP::setBestSpecimenInfo(instanceFile instanceFile, int bestSpecimenIndex) {
+void geneticCVRP::setBestSpecimenInfo(int bestSpecimenIndex) {
 	bestFoundSolutionTotalCost = allCurrentSpecimen[bestSpecimenIndex].getTotalCost();
 
-	for (int i = 0; i < instanceFile.dimension; i++) {
+	for (int i = 0; i < currentInstanceFile.dimension; i++) {
 		bestFoundSolutionPointOrder[i] = allCurrentSpecimen[bestSpecimenIndex].getPointByIndex(i);
 	}
+}
+
+// Set the instance file for this object.
+void geneticCVRP::setInstanceFile(instanceFile instanceFile) {
+	this->currentInstanceFile = instanceFile;
 }
 
 // Clean up all information about best found solution and all the specimen.
@@ -74,6 +81,7 @@ void geneticCVRP::clearInfo() {
 	allCurrentSpecimen.clear();
 	newGenerationOfSpecimen.clear();
 }
+
 // Returns true if the first specimen has a smaller total cost than the second one.
 // Used when sorting specimen.
 bool compareSpecimen(specimen firstSpecimen, specimen secondSpecimen) {
@@ -81,8 +89,8 @@ bool compareSpecimen(specimen firstSpecimen, specimen secondSpecimen) {
 }
 
 // Main genetic algorithm loop.
-void geneticCVRP::mainAlgorithmLoop(instanceFile instanceFile, std::ofstream& experimentResultsFile, int iteration) {
-	for (int i = 0; i < instanceFile.dimension; i++) {
+void geneticCVRP::mainAlgorithmLoop(std::ofstream& experimentResultsFile, int iteration) {
+	for (int i = 0; i < currentInstanceFile.dimension; i++) {
 		bestFoundSolutionPointOrder.push_back(i); // Start with adding all points in the order they are presented in in the instance file.
 	}
 
@@ -90,21 +98,21 @@ void geneticCVRP::mainAlgorithmLoop(instanceFile instanceFile, std::ofstream& ex
 		calculateSumOfRanks(); // If the select is rank selection, calculate sum of ranks for all points.
 	}
 
-	instanceFile.calculateDistancesBetweenPoints();
-	generateInitialSpecimen(instanceFile); // Generate the initial generation of specimen.
-	analyseNewGeneration(instanceFile, 0, experimentResultsFile, iteration); // Find best and worst specimen of the initial generation.
+	currentInstanceFile.calculateDistancesBetweenPoints();
+	generateInitialSpecimen(); // Generate the initial generation of specimen.
+	analyseNewGeneration(0, experimentResultsFile, iteration); // Find best and worst specimen of the initial generation.
 
 	for (int i = 0; i < maxNumberOfGenerations; i++) {
 		if (selectUsed == 'k') // For each generation in rank selection.
 		{
 			std::sort(allCurrentSpecimen.begin(), allCurrentSpecimen.end(), compareSpecimen); // If the select is rank selection, rank specimen accordingly.
 		}
-		createNewOffspring(instanceFile); // Create a new generation of specimen.
-		mutate(instanceFile); // Mutate new specimen.
-		analyseNewGeneration(instanceFile, i + 1, experimentResultsFile, iteration); // Find best specimen.
+		createNewOffspring(); // Create a new generation of specimen.
+		mutate(); // Mutate new specimen.
+		analyseNewGeneration(i + 1, experimentResultsFile, iteration); // Find best specimen.
 	}
 
-	instanceFile.dealocateDistancesBetweenPoints();
+	currentInstanceFile.dealocateDistancesBetweenPoints();
 }
 
 // Used in rank selection.
@@ -117,16 +125,16 @@ void geneticCVRP::calculateSumOfRanks() {
 }
 
 // Randomly generate initial specimen.
-void geneticCVRP::generateInitialSpecimen(instanceFile instanceFile) {
+void geneticCVRP::generateInitialSpecimen() {
 	std::vector<int> pointOrder;
 	specimen specimen;
 
-	for (int i = 0; i < instanceFile.dimension; i++) { // Generate a point order that will be shuffled between subsequent speciment.
+	for (int i = 0; i < currentInstanceFile.dimension; i++) { // Generate a point order that will be shuffled between subsequent speciment.
 		pointOrder.push_back(i);
 	}
 
 	for (int i = 0; i < numberOfSpecimenInAGeneration; i++) { // For each specimen, generate a random route.
-		specimen.generateRandomRoute(instanceFile, pointOrder);
+		specimen.generateRandomRoute(currentInstanceFile, pointOrder);
 		allCurrentSpecimen.push_back(specimen);
 		specimen.clearPointOrder();
 	}
@@ -134,32 +142,32 @@ void geneticCVRP::generateInitialSpecimen(instanceFile instanceFile) {
 
 // Find best specimen in the new generation and check, if it's better than the best found specimen across all previous generations.
 // Find the worst cost of a specimen in new generation.
-void geneticCVRP::analyseNewGeneration(instanceFile instanceFile, int generationNumber, std::ofstream &experimentResultsFile, int iteration) {
-	int bestSpecimenIndex; 
+void geneticCVRP::analyseNewGeneration(int generationNumber, std::ofstream& experimentResultsFile, int iteration) {
+	int bestSpecimenIndex;
 	int averageSolutionTotalCost = 0; // Average of total costs of all solution in a particular generation.
 	int currentGenerationWorstFoundSolutionTotalCost = 0;
 	int currentGenerationBestFoundSolutionTotalCost = INT_MAX; // Total cost of the best solution found (current generation only).
 	bool newBestSpecimenFound = false; // Used for tracking if a new best specimen has been found in this generation.
 
 	for (int j = 0; j < numberOfSpecimenInAGeneration; j++) { // Check for a new best solution.
-		findBestSpecimenInAGeneration(j, instanceFile, averageSolutionTotalCost, currentGenerationBestFoundSolutionTotalCost, bestSpecimenIndex, newBestSpecimenFound);
+		findBestSpecimenInAGeneration(j, averageSolutionTotalCost, currentGenerationBestFoundSolutionTotalCost, bestSpecimenIndex, newBestSpecimenFound);
 		findWorstSpecimenInAGeneration(j, currentGenerationWorstFoundSolutionTotalCost);
 	}
 
 	if (newBestSpecimenFound) { // If a new best total cost has been found.
-		setBestSpecimenInfo(instanceFile, bestSpecimenIndex); // Save its information.
+		setBestSpecimenInfo(bestSpecimenIndex); // Save its information.
 	}
 
 	// Save information to generation results file.
-	experimentResultsFile << instanceFile.getFileName() << ";" << iteration << ";" << generationNumber << ";" << 
-		bestFoundSolutionTotalCost << ";" << worstFoundSolutionTotalCost << ";" << 
+	experimentResultsFile << currentInstanceFile.getFileName() << ";" << iteration << ";" << generationNumber << ";" <<
+		bestFoundSolutionTotalCost << ";" << worstFoundSolutionTotalCost << ";" <<
 		averageSolutionTotalCost / numberOfSpecimenInAGeneration << ";" <<
 		currentGenerationBestFoundSolutionTotalCost << ";" << currentGenerationWorstFoundSolutionTotalCost << std::endl;
 }
 
 // Save information about average solution and potential new best solutions in this generation.
-void geneticCVRP::findBestSpecimenInAGeneration(int index, instanceFile instanceFile, int &averageSolutionTotalCost, int &currentGenerationBestFoundSolutionTotalCost, int &bestSpecimenIndex, bool &newBestSpecimenFound) {
-	allCurrentSpecimen[index].calculateTotalCost(instanceFile);
+void geneticCVRP::findBestSpecimenInAGeneration(int index, int& averageSolutionTotalCost, int& currentGenerationBestFoundSolutionTotalCost, int& bestSpecimenIndex, bool& newBestSpecimenFound) {
+	allCurrentSpecimen[index].calculateTotalCost(currentInstanceFile);
 	averageSolutionTotalCost += allCurrentSpecimen[index].getTotalCost();
 
 	if (allCurrentSpecimen[index].getTotalCost() < currentGenerationBestFoundSolutionTotalCost) { // Check if current specimen is best in current generation.
@@ -174,7 +182,7 @@ void geneticCVRP::findBestSpecimenInAGeneration(int index, instanceFile instance
 }
 
 // Save information about worst total cost in this generation.
-void geneticCVRP::findWorstSpecimenInAGeneration(int index, int &currentGenerationWorstFoundSolutionTotalCost) {
+void geneticCVRP::findWorstSpecimenInAGeneration(int index, int& currentGenerationWorstFoundSolutionTotalCost) {
 	if (allCurrentSpecimen[index].getTotalCost() > currentGenerationWorstFoundSolutionTotalCost) { // Check if current specimen is worst in current generation.
 		currentGenerationWorstFoundSolutionTotalCost = allCurrentSpecimen[index].getTotalCost();
 
@@ -187,7 +195,7 @@ void geneticCVRP::findWorstSpecimenInAGeneration(int index, int &currentGenerati
 // Generates a new generation of specimen by either taking crossover of two randomly selected parents as two children
 // or by taking two of the randomly selected parents as the children outright.
 // This process is repeated until there are numberOfSpecimenInAGeneration specimen in the new generation.
-void geneticCVRP::createNewOffspring(instanceFile instanceFile) {
+void geneticCVRP::createNewOffspring() {
 	int probability = getRand(0, 99);
 
 	newGenerationOfSpecimen.clear(); // Clear the values.
@@ -198,12 +206,12 @@ void geneticCVRP::createNewOffspring(instanceFile instanceFile) {
 
 	for (int i = 0; i < numberOfSpecimenInAGeneration / 2; i++) // Both using crossover and just taking the parents generate 2 offspring.
 	{
-		std::pair<int, int> parentIndexes = selection(instanceFile);
+		std::pair<int, int> parentIndexes = selection();
 
 		probability = getRand(0, 99);
 
 		if (probability / 100.0 < crossoverProbability) { // Produce two offspring from two parents using crossover.
-			selectCrossover(instanceFile, parentIndexes.first, parentIndexes.second);
+			selectCrossover(parentIndexes.first, parentIndexes.second);
 		}
 		else { // Take two parents without modifying them, but guarantee they'll mutate.
 			newGenerationOfSpecimen.push_back(allCurrentSpecimen[parentIndexes.first]);
@@ -229,7 +237,7 @@ void geneticCVRP::calculateFitnessFunction() {
 }
 
 // Returns a pair of point indexes, used to select parents.
-std::pair<int, int> geneticCVRP::selection(instanceFile instanceFile) {
+std::pair<int, int> geneticCVRP::selection() {
 	std::pair<int, int> parentIndexes;
 
 	double firstProbability, secondProbability;
@@ -237,23 +245,23 @@ std::pair<int, int> geneticCVRP::selection(instanceFile instanceFile) {
 
 	switch (selectUsed) { // Select one of selection methods.
 	case 'k': // Rank selection.
-		return rankSelectionIndexes(instanceFile);
+		return rankSelectionIndexes();
 		break;
 
 	case 'r': // Random selection.
-		return randomSelection(instanceFile);
+		return randomSelection();
 		break;
 
 	case 's': // Stochastic universal sampling.
-		return stochasticUniversalSamplingIndexes(instanceFile);
+		return stochasticUniversalSamplingIndexes();
 		break;
 
 	case 't': // Tournament selection.
-		return tournamentSelectionIndexes(instanceFile);
+		return tournamentSelectionIndexes();
 		break;
 
 	case 'w': // Roulette wheel selection.
-		return rouletteWheelSelectionIndexes(instanceFile);
+		return rouletteWheelSelectionIndexes();
 		break;
 
 	default:
@@ -262,18 +270,18 @@ std::pair<int, int> geneticCVRP::selection(instanceFile instanceFile) {
 }
 
 // Select a pair of indexes using rank selection.
-std::pair<int, int> geneticCVRP::rankSelectionIndexes(instanceFile instanceFile) {
+std::pair<int, int> geneticCVRP::rankSelectionIndexes() {
 	std::pair<int, int> parentIndexes;
 
-	parentIndexes.first = rankSelection(instanceFile);
+	parentIndexes.first = rankSelection();
 	do {
-		parentIndexes.second = rankSelection(instanceFile);
+		parentIndexes.second = rankSelection();
 	} while (parentIndexes.first == parentIndexes.second);
 	return parentIndexes;
 }
 
 // Return a single parent index using rank selection.
-int geneticCVRP::rankSelection(instanceFile instanceFile) {
+int geneticCVRP::rankSelection() {
 	int parentIndex = 0;
 	double totalRankSum = 0.0;
 
@@ -290,19 +298,12 @@ int geneticCVRP::rankSelection(instanceFile instanceFile) {
 }
 
 // Select a pair of indexes using random selection.
-std::pair<int, int> geneticCVRP::randomSelection(instanceFile instanceFile) {
-	std::pair<int, int> parentIndexes;
-
-	parentIndexes.first = getRand(0, numberOfSpecimenInAGeneration - 1); // Randomly select first parent.
-	do {
-		parentIndexes.second = getRand(0, numberOfSpecimenInAGeneration - 1); // Randomly select second parent.
-	} while (parentIndexes.first == parentIndexes.second); // Make sure parents are different specimen.
-
-	return parentIndexes;
+std::pair<int, int> geneticCVRP::randomSelection() {
+	return getRandUniquePair(0, numberOfSpecimenInAGeneration - 1);
 }
 
 // Select a pair of indexes using stochastic universal sampling selection.
-std::pair<int, int> geneticCVRP::stochasticUniversalSamplingIndexes(instanceFile instanceFile) {
+std::pair<int, int> geneticCVRP::stochasticUniversalSamplingIndexes() {
 	std::pair<int, int> parentIndexes;
 
 	double firstProbability, secondProbability;
@@ -317,26 +318,26 @@ std::pair<int, int> geneticCVRP::stochasticUniversalSamplingIndexes(instanceFile
 		}
 
 		totalSpecimenValueSum = 0.0;
-		parentIndexes.first = rouletteWheelSelection(instanceFile, 0, totalSpecimenValueSum, firstProbability);
-		parentIndexes.second = rouletteWheelSelection(instanceFile, parentIndexes.first + 1, totalSpecimenValueSum, secondProbability);
+		parentIndexes.first = rouletteWheelSelection(0, totalSpecimenValueSum, firstProbability);
+		parentIndexes.second = rouletteWheelSelection(parentIndexes.first + 1, totalSpecimenValueSum, secondProbability);
 	} while (parentIndexes.first == parentIndexes.second);
 
 	return parentIndexes;
 }
 
 // Select a pair of indexes using tournament selection.
-std::pair<int, int> geneticCVRP::tournamentSelectionIndexes(instanceFile instanceFile) {
+std::pair<int, int> geneticCVRP::tournamentSelectionIndexes() {
 	std::pair<int, int> parentIndexes;
 
-	parentIndexes.first = tournamentSelection(instanceFile);
+	parentIndexes.first = tournamentSelection();
 	do {
-		parentIndexes.second = tournamentSelection(instanceFile);
+		parentIndexes.second = tournamentSelection();
 	} while (parentIndexes.first == parentIndexes.second);
 	return parentIndexes;
 }
 
 // Return a single parent index using tournament selection.
-int geneticCVRP::tournamentSelection(instanceFile instanceFile) {
+int geneticCVRP::tournamentSelection() {
 	int parentIndex;
 	int numberOfTournamentParticipants = numberOfSpecimenInAGeneration / 10;
 	int randomParticipantIndex;
@@ -363,7 +364,7 @@ int geneticCVRP::tournamentSelection(instanceFile instanceFile) {
 }
 
 // Select a pair of indexes using roulette wheel selection.
-std::pair<int, int> geneticCVRP::rouletteWheelSelectionIndexes(instanceFile instanceFile) {
+std::pair<int, int> geneticCVRP::rouletteWheelSelectionIndexes() {
 	std::pair<int, int> parentIndexes;
 
 	double firstProbability, secondProbability;
@@ -373,17 +374,17 @@ std::pair<int, int> geneticCVRP::rouletteWheelSelectionIndexes(instanceFile inst
 
 	totalSpecimenValueSum = 0.0;
 
-	parentIndexes.first = rouletteWheelSelection(instanceFile, 0, totalSpecimenValueSum, firstProbability);
+	parentIndexes.first = rouletteWheelSelection(0, totalSpecimenValueSum, firstProbability);
 	do {
 		firstProbability = (getRand(0, 9999)) / 10000.0;
 		totalSpecimenValueSum = 0.0;
-		parentIndexes.second = rouletteWheelSelection(instanceFile, 0, totalSpecimenValueSum, firstProbability);
+		parentIndexes.second = rouletteWheelSelection(0, totalSpecimenValueSum, firstProbability);
 	} while (parentIndexes.first == parentIndexes.second);
 	return parentIndexes;
 }
 
 // Return a single parent index using rank selection.
-int geneticCVRP::rouletteWheelSelection(instanceFile instanceFile, int parentIndex, double& totalSpecimenValueSum, double probability) {
+int geneticCVRP::rouletteWheelSelection(int parentIndex, double& totalSpecimenValueSum, double probability) {
 	while (parentIndex < numberOfSpecimenInAGeneration) {
 		totalSpecimenValueSum += (worstFoundSolutionTotalCost - allCurrentSpecimen[parentIndex].getTotalCost()) / (double)fitnessFunction; // Casting to double to avoid dividing integer by integer.
 		if (totalSpecimenValueSum > probability) {
@@ -397,31 +398,31 @@ int geneticCVRP::rouletteWheelSelection(instanceFile instanceFile, int parentInd
 }
 
 // Selects crossover based on data loaded from a file.
-void geneticCVRP::selectCrossover(instanceFile instanceFile, int firstParentIndex, int secondParentIndex) {
+void geneticCVRP::selectCrossover(int firstParentIndex, int secondParentIndex) {
 	std::pair<int, int> parentIndexPair; // Setting up cutoff points for ordered crossover selection.
 
 	switch (crossoverUsed) { // Select crossover that's currently used in the experiment.
-		case 'c': // Cycle crossover.
-			cycleCrossover(instanceFile, firstParentIndex, secondParentIndex);
-			break;
+	case 'c': // Cycle crossover.
+		cycleCrossover(firstParentIndex, secondParentIndex);
+		break;
 
-		case 'o': // Ordered crossover.
-			parentIndexPair = getRandUniquePair(1, instanceFile.dimension - 1); // Get two different cutoff indexes.
-			// Create two new specimen using ordered crossover.
-			newGenerationOfSpecimen.push_back(orderedCrossover(instanceFile, firstParentIndex, secondParentIndex, parentIndexPair.first, parentIndexPair.second));
-			newGenerationOfSpecimen.push_back(orderedCrossover(instanceFile, secondParentIndex, firstParentIndex, parentIndexPair.first, parentIndexPair.second));			break;
+	case 'o': // Ordered crossover.
+		parentIndexPair = getRandUniquePair(1, currentInstanceFile.dimension - 1); // Get two different cutoff indexes.
+		// Create two new specimen using ordered crossover.
+		newGenerationOfSpecimen.push_back(orderedCrossover(firstParentIndex, secondParentIndex, parentIndexPair.first, parentIndexPair.second));
+		newGenerationOfSpecimen.push_back(orderedCrossover(secondParentIndex, firstParentIndex, parentIndexPair.first, parentIndexPair.second));			break;
 
-		case 'p': // Partially mapped crossover.
-			partiallyMappedCrossoverCutoffsSetup(instanceFile, firstParentIndex, secondParentIndex);
-			break;
+	case 'p': // Partially mapped crossover.
+		partiallyMappedCrossoverCutoffsSetup(firstParentIndex, secondParentIndex);
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
 // This crossover generates two offspring from two parents by finding cycles in parents, then copying cycle 1 from parent 1, cycle 2 from parent 2 etc.
-void geneticCVRP::cycleCrossover(instanceFile instanceFile, int firstParentIndex, int secondParentIndex) {
+void geneticCVRP::cycleCrossover(int firstParentIndex, int secondParentIndex) {
 	std::vector<int> cycles; // Vector used for marking which point belongs to which cycle.
 	int pointsVisited = 1; // Depot is skipped.
 	int currentPoint = 1; // Index of the point that's used to start a new cycle.
@@ -429,14 +430,14 @@ void geneticCVRP::cycleCrossover(instanceFile instanceFile, int firstParentIndex
 	int firstPoint; // First point in a cycle - reaching it again will complete the cycle.
 	int currentCycle = 1; // Number of the current cycle.
 
-	int* firstParentPointLocation = new int[instanceFile.dimension]; // Stores indexes of first parent's visited points.
+	int* firstParentPointLocation = new int[currentInstanceFile.dimension]; // Stores indexes of first parent's visited points.
 
-	for (int i = 0; i < instanceFile.dimension; i++) {
+	for (int i = 0; i < currentInstanceFile.dimension; i++) {
 		cycles.push_back(-1); // -1 means that this point doesn't belong to any cycle (yet).
 		firstParentPointLocation[allCurrentSpecimen[firstParentIndex].getPointByIndex(i)] = i; // Point i can be found at an i spot in the array.  
 	}
 
-	while (pointsVisited < instanceFile.dimension) { // Find all cycles. Don't visit the depot.
+	while (pointsVisited < currentInstanceFile.dimension) { // Find all cycles. Don't visit the depot.
 		while (cycles[currentPoint] != -1) currentPoint++; // Increment currentPoint until the new current point hasn't been a part of any previous cycle.
 		cycles[currentPoint] = currentCycle;
 		nextPoint = allCurrentSpecimen[secondParentIndex].getPointByIndex(currentPoint); // Drop down.
@@ -458,7 +459,7 @@ void geneticCVRP::cycleCrossover(instanceFile instanceFile, int firstParentIndex
 	child1Points.push_back(0);
 	child2Points.push_back(0);
 
-	for (int i = 1; i < instanceFile.dimension; i++) {
+	for (int i = 1; i < currentInstanceFile.dimension; i++) {
 		if (cycles[i] % 2 == 1) { // Odd cycles.
 			child1Points.push_back(allCurrentSpecimen[firstParentIndex].getPointByIndex(i));
 			child2Points.push_back(allCurrentSpecimen[secondParentIndex].getPointByIndex(i));
@@ -479,15 +480,16 @@ void geneticCVRP::cycleCrossover(instanceFile instanceFile, int firstParentIndex
 
 // This crossover generates two offspring from two parents by selecting a range of points in one parent and copying it over to the child in the same order,
 // while the remaining points in child are filled out by inserting non-repeating points from parent 2 in order.
-specimen geneticCVRP::orderedCrossover(instanceFile instanceFile, int firstParentIndex, int secondParentIndex, int leftCutoff, int rightCutoff) {
+// To create the second offspring, the order of parents is swapped.
+specimen geneticCVRP::orderedCrossover(int firstParentIndex, int secondParentIndex, int leftCutoff, int rightCutoff) {
 	specimen specimen;
-	std::vector<int> childPoints(instanceFile.dimension, 0); 
-	int* pointLocation = new int[instanceFile.dimension]; // Stores indexes of visited points.
+	std::vector<int> childPoints(currentInstanceFile.dimension, 0);
+	int* pointLocation = new int[currentInstanceFile.dimension]; // Stores indexes of visited points.
 	int childPoint;
 
 	childPoints[0] = 0; // Set depot.	
 
-	for (int i = 0; i < instanceFile.dimension; i++) {
+	for (int i = 0; i < currentInstanceFile.dimension; i++) { // Location of points in child - set to -1, since child currently has 0 points.
 		pointLocation[i] = -1;
 	}
 
@@ -500,26 +502,31 @@ specimen geneticCVRP::orderedCrossover(instanceFile instanceFile, int firstParen
 	int childIndex = rightCutoff + 1; // Index where the next point will be inserted in a child.
 	int parentIndex = rightCutoff + 1;
 
-	if (childIndex >= instanceFile.dimension) {
+	// Go back to the beginning if child index reaches the last point of the parent.
+	if (childIndex >= currentInstanceFile.dimension) {
 		childIndex = 1;
 	}
 
-	if (parentIndex >= instanceFile.dimension) {
+	// Go back to the beginning if parent index reaches the last point of the parent.
+	if (parentIndex >= currentInstanceFile.dimension) {
 		parentIndex = 1;
 	}
 
-	for (int i = 0; i < instanceFile.dimension && childIndex != leftCutoff; i++) { // Ignore depot.
-		if (pointLocation[allCurrentSpecimen[secondParentIndex].getPointByIndex(parentIndex)] == -1) // If point doesn't belong in the cutoff.
-		{
+	for (int i = 0; i < currentInstanceFile.dimension && childIndex != leftCutoff; i++) { // Ignore depot.
+		if (pointLocation[allCurrentSpecimen[secondParentIndex].getPointByIndex(parentIndex)] == -1) { // If point doesn't belong in the cutoff.
 			childPoints[childIndex] = allCurrentSpecimen[secondParentIndex].getPointByIndex(parentIndex);
 			childIndex++;
-			if (childIndex >= instanceFile.dimension) {
+
+			// Go back to the beginning if child index reaches the last point of the parent.
+			if (childIndex >= currentInstanceFile.dimension) {
 				childIndex = 1; // Start adding points at the start.
 			}
 		}
 
 		parentIndex++;
-		if (parentIndex >= instanceFile.dimension) {
+
+		// Go back to the beginning if parent index reaches the last point of the parent.
+		if (parentIndex >= currentInstanceFile.dimension) {
 			parentIndex = 1;
 		}
 	}
@@ -531,30 +538,23 @@ specimen geneticCVRP::orderedCrossover(instanceFile instanceFile, int firstParen
 }
 
 // Setting up cutoff points for partially mapped crossover selection.
-void geneticCVRP::partiallyMappedCrossoverCutoffsSetup(instanceFile instanceFile, int firstParentIndex, int secondParentIndex) {
-	int leftCutoff, rightCutoff; // Cutoffs are used to determine an allel.
-	leftCutoff = getRand(1, instanceFile.dimension - 1); // Avoid leftCutoff value being 0.
+void geneticCVRP::partiallyMappedCrossoverCutoffsSetup(int firstParentIndex, int secondParentIndex) {
+	// Get two unique integers to serve as cutoffs, where they're both different numbers and first cutoff is smaller than the second one.
+	std::pair<int, int> cutoffs = getRandUniquePair(1, currentInstanceFile.dimension - 1);
 
-	do {
-		rightCutoff = getRand(1, instanceFile.dimension - 1);
-	} while (rightCutoff == leftCutoff); // Make sure first and second cutoff are different values. 
-
-	if (leftCutoff > rightCutoff) {
-		std::swap(leftCutoff, rightCutoff); // Second cutoff should be a bigger value than the first cutoff.
-	}
-
-	newGenerationOfSpecimen.push_back(partiallyMappedCrossover(instanceFile, firstParentIndex, secondParentIndex, leftCutoff, rightCutoff));
-	newGenerationOfSpecimen.push_back(partiallyMappedCrossover(instanceFile, secondParentIndex, firstParentIndex, leftCutoff, rightCutoff));
+	newGenerationOfSpecimen.push_back(partiallyMappedCrossover(firstParentIndex, secondParentIndex, cutoffs.first, cutoffs.second));
+	newGenerationOfSpecimen.push_back(partiallyMappedCrossover(secondParentIndex, firstParentIndex, cutoffs.first, cutoffs.second));
 }
 
 // This crossover generates two offspring from two parents by selecting a random crossover range in both parents, swapping those points,
 // defining a mapping relationship (to avoid repeating points in offspring) and then mapping remaining points in offspring to make sure nothing repeats.
-specimen geneticCVRP::partiallyMappedCrossover(instanceFile instanceFile, int firstParentIndex, int secondParentIndex, int leftCutoff, int rightCutoff) {
+// To generate a second child, swap the order of parents around.
+specimen geneticCVRP::partiallyMappedCrossover(int firstParentIndex, int secondParentIndex, int leftCutoff, int rightCutoff) {
 	specimen specimen;
-	allCurrentSpecimen[firstParentIndex].setPointLocations(instanceFile); // Stores indexes of first parent's points.
-	allCurrentSpecimen[secondParentIndex].setPointLocations(instanceFile); // Stores indexes of first parent's points.
+	allCurrentSpecimen[firstParentIndex].setPointLocations(currentInstanceFile); // Stores indexes of first parent's points.
+	allCurrentSpecimen[secondParentIndex].setPointLocations(currentInstanceFile); // Stores indexes of first parent's points.
 
-	std::vector<int> childPoints(instanceFile.dimension, 0);
+	std::vector<int> childPoints(currentInstanceFile.dimension, 0); // Create a vector of integers and fill it with value of 0.
 
 	int nonCopiedValue;
 	int indexOfReplacedPoint;
@@ -579,7 +579,7 @@ specimen geneticCVRP::partiallyMappedCrossover(instanceFile instanceFile, int fi
 		}
 	}
 
-	for (int i = rightCutoff + 1; i < instanceFile.dimension; i++) { // Copy remaining points to the right of crossover range from second parent.
+	for (int i = rightCutoff + 1; i < currentInstanceFile.dimension; i++) { // Copy remaining points to the right of crossover range from second parent.
 		if (childPoints[i] == 0) {
 			childPoints[i] = allCurrentSpecimen[secondParentIndex].getPointByIndex(i);
 		}
@@ -603,23 +603,23 @@ int geneticCVRP::findValueInsideParent(int valueIndex, int firstParentIndex, int
 }
 
 // Handle mutation of all offspring in new generation.
-void geneticCVRP::mutate(instanceFile instanceFile) {
+void geneticCVRP::mutate() {
 	int probability; // Determines whether a mutation will happen or not.
-	
+
 	for (int i = 0; i < numberOfSpecimenInAGeneration; i++) { // For each offspring.
 		probability = getRand(0, 99);
 
 		if (probability / 100.0 < mutationProbability || allCurrentSpecimen[i].obligatoryMutation == true) { // If the specimen is a parent from previous generation, mutation will happen regardless of probability.
 			switch (mutationUsed) { // Select mutation to be used.
 			case 's': // Swap mutation.
-				mutateSwapOnSpecimen(instanceFile, i); // Mutate the specimen with index i.
+				mutateSwapOnSpecimen(i); // Mutate the specimen with index i.
 				break;
 
 			case 'i': // Invert mutation.
-				mutateInvertOnSpecimen(instanceFile, i); // Mutate the specimen with index i.
+				mutateInvertOnSpecimen(i); // Mutate the specimen with index i.
 				break;
 
-			default: 
+			default:
 				break;
 			}
 		}
@@ -627,19 +627,19 @@ void geneticCVRP::mutate(instanceFile instanceFile) {
 }
 
 // Mutation that swaps two random points in a specimen. Repeats multiple times.
-void geneticCVRP::mutateSwapOnSpecimen(instanceFile instanceFile, int specimenIndex) {
-	int amountOfMutations = instanceFile.dimension; // How many times should mutations happen.
+void geneticCVRP::mutateSwapOnSpecimen(int specimenIndex) {
+	int amountOfMutations = currentInstanceFile.dimension; // How many times should mutations happen.
 	std::pair<int, int> mutationPair; // Indexes of points which will be mutated.
 
 	for (int i = 0; i < amountOfMutations; i++) { // Mutate multiple times.
-		mutationPair = getRandUniquePair(1, instanceFile.dimension - 1); // Randomly select indices of the first and second point. Don't swap first point (depot).
-		allCurrentSpecimen[specimenIndex].mutateSwap(instanceFile, mutationPair);
+		mutationPair = getRandUniquePair(1, currentInstanceFile.dimension - 1); // Randomly select indices of the first and second point. Don't swap first point (depot).
+		allCurrentSpecimen[specimenIndex].mutateSwap(currentInstanceFile, mutationPair);
 	}
 }
 
 // Mutation that swaps all points between two points in a route. Only one mutation is performed per specimen.
-void geneticCVRP::mutateInvertOnSpecimen(instanceFile instanceFile, int specimenIndex) {
+void geneticCVRP::mutateInvertOnSpecimen(int specimenIndex) {
 	std::pair<int, int>	mutationPair; // Indexes of points which will be mutated.
-	mutationPair = getRandUniquePair(1, instanceFile.dimension - 1); // Randomly select indices of the first and second point. Don't swap first point (depot).
-	allCurrentSpecimen[specimenIndex].mutateInvert(instanceFile, mutationPair);
+	mutationPair = getRandUniquePair(1, currentInstanceFile.dimension - 1); // Randomly select indices of the first and second point. Don't swap first point (depot).
+	allCurrentSpecimen[specimenIndex].mutateInvert(currentInstanceFile, mutationPair);
 }

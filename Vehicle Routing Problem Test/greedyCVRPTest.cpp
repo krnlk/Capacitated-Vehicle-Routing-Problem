@@ -44,7 +44,3 @@ TEST_F(greedyCVRPTest, SubroutesCapacityTest) {
 	EXPECT_LE(subroute7Capacity, instanceFile.getMaxCapacity());
 	EXPECT_LE(subroute8Capacity, instanceFile.getMaxCapacity());
 }
-
-TEST_F(greedyCVRPTest, Test) {
-
-}

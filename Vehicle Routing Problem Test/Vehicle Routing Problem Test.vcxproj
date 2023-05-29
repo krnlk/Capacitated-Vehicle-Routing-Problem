@@ -37,6 +37,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="correctSolutionsValuesTest.cpp" />
     <ClCompile Include="cVRPSolutionTest.cpp" />
     <ClCompile Include="environmentTest.cpp" />
     <ClCompile Include="geneticCVRP.cpp" />
@@ -58,7 +59,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vehicle Routing Problem\Vehicle Routing Problem.vcxproj">
+      <Project>{6a1ebd30-9704-4a74-8881-55f2566452bc}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

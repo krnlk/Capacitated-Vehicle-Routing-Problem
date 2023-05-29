@@ -3,7 +3,6 @@
 #include "../Vehicle Routing Problem/instanceFile.h"
 #include "../Vehicle Routing Problem/cVRPSolution.h"
 #include "../Vehicle Routing Problem/randomCVRP.h"
-//#include "../Vehicle Routing Problem/greedyCVRP.cpp"
 
 class randomCVRPTest : public ::testing::Test {
 protected:

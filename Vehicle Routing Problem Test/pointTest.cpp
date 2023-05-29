@@ -16,8 +16,12 @@ protected:
 		point3.setPosition(2, 13);
 		point3.setIndex(2);
 		point3.setWeight(10);
+
+		point4.setPosition(58, 48);
+		point4.setIndex(3);
+		point4.setWeight(6);
 	}
-	point point1, point2, point3;
+	point point1, point2, point3, point4;
 };
 
 TEST_F(PointTest, SetterGetterDataTest) {
@@ -35,6 +39,11 @@ TEST_F(PointTest, SetterGetterDataTest) {
 	EXPECT_EQ(point3.getPositionY(), 13);
 	EXPECT_EQ(point3.getIndex(), 2);
 	EXPECT_EQ(point3.getWeight(), 10);
+
+	EXPECT_EQ(point4.getPositionX(), 58);
+	EXPECT_EQ(point4.getPositionY(), 48);
+	EXPECT_EQ(point4.getIndex(), 3);
+	EXPECT_EQ(point4.getWeight(), 6);
 };
 
 TEST_F(PointTest, DistanceBetweenPointsTest) {
@@ -50,4 +59,6 @@ TEST_F(PointTest, DistanceBetweenPointsTest) {
 
 	EXPECT_EQ(point3.getDistanceToAnotherPoint(point1), 12);
 	EXPECT_EQ(point3.getDistanceToAnotherPoint(point2), 28);
+
+	EXPECT_EQ(point4.getDistanceToAnotherPoint(point1), 58);
 }

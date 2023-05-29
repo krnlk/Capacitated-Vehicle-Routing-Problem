@@ -15,6 +15,7 @@
     <ClCompile Include="geneticCVRPTestMutation.cpp" />
     <ClCompile Include="geneticCVRPTestCrossover.cpp" />
     <ClCompile Include="geneticCVRPTestSelection.cpp" />
+    <ClCompile Include="correctSolutionsValuesTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -22,5 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

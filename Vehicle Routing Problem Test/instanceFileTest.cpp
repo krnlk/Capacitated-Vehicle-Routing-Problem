@@ -1,9 +1,16 @@
 #include "pch.h"
 
 #include "../Vehicle Routing Problem/instanceFile.h"
-#include "../Vehicle Routing Problem/point.h"
 #include "../Vehicle Routing Problem/specimen.h"
-#include "../Vehicle Routing Problem/Filepath.h"
+#include "../Vehicle Routing Problem/specimen.cpp"
+#include "../Vehicle Routing Problem/cVRPSolution.h"
+#include "../Vehicle Routing Problem/cVRPSolution.cpp"
+#include "../Vehicle Routing Problem/filepath.h"
+#include "../Vehicle Routing Problem/filepath.cpp"
+#include "../Vehicle Routing Problem/point.h"
+#include "../Vehicle Routing Problem/point.cpp"
+#include "../Vehicle Routing Problem/pseudoRandomGeneration.h"
+#include "../Vehicle Routing Problem/pseudoRandomGeneration.cpp"
 
 class InstanceFileTest : public ::testing::Test {
 protected:
