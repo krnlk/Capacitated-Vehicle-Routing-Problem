@@ -1,1 +1,0 @@
-instance file;instance repeats;best known route cost;best found route cost;best found route path;average error;average time [s];average best solution

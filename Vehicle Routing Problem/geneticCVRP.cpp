@@ -627,7 +627,7 @@ void geneticCVRP::mutateSwapOnSpecimen(int specimenIndex) {
 
 	for (int i = 0; i < amountOfMutations; i++) { // Mutate multiple times.
 		mutationPair = getRandUniquePair(1, currentInstanceFile.dimension - 1); // Randomly select indices of the first and second point. Don't swap first point (depot).
-		allCurrentSpecimen[specimenIndex].mutateSwap(currentInstanceFile, mutationPair);
+		allCurrentSpecimen[specimenIndex].mutateSwap(mutationPair);
 	}
 }
 
@@ -635,5 +635,5 @@ void geneticCVRP::mutateSwapOnSpecimen(int specimenIndex) {
 void geneticCVRP::mutateInvertOnSpecimen(int specimenIndex) {
 	std::pair<int, int>	mutationPair; // Indexes of points which will be mutated.
 	mutationPair = getRandUniquePair(1, currentInstanceFile.dimension - 1); // Randomly select indices of the first and second point. Don't swap first point (depot).
-	allCurrentSpecimen[specimenIndex].mutateInvert(currentInstanceFile, mutationPair);
+	allCurrentSpecimen[specimenIndex].mutateInvert(mutationPair);
 }
