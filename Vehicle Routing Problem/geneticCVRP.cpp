@@ -7,14 +7,14 @@
 #include "pseudoRandomGeneration.h"
 
 // Get the cost of the solution with the lowest found cost.
-int geneticCVRP::getBestFoundSolutionTotalCost()
+int geneticCVRP::getBestFoundSolutionTotalCost() const
 {
 	return bestFoundSolutionTotalCost;
 }
 
 // Get the point order of the solution with the lowest found cost
 // in string format, with white spaces to separate points.
-std::string geneticCVRP::getBestFoundSolutionPointOrder() {
+std::string geneticCVRP::getBestFoundSolutionPointOrder() const {
 	std::stringstream stringifiedPointOrder;
 	for (auto iterator = bestFoundSolutionPointOrder.begin(); iterator != bestFoundSolutionPointOrder.end(); iterator++) {
 		if (iterator != bestFoundSolutionPointOrder.begin()) {
@@ -87,6 +87,8 @@ bool compareSpecimen(specimen firstSpecimen, specimen secondSpecimen) {
 
 // Main genetic algorithm loop.
 void geneticCVRP::mainAlgorithmLoop(std::ofstream& experimentResultsFile, int iteration) {
+	generationsSinceNewBestSolutionFound = 0;
+
 	for (int i = 0; i < currentInstanceFile.dimension; i++) {
 		bestFoundSolutionPointOrder.push_back(i); // Start with adding all points in the order they are presented in in the instance file.
 	}
@@ -99,7 +101,10 @@ void geneticCVRP::mainAlgorithmLoop(std::ofstream& experimentResultsFile, int it
 	generateInitialSpecimen(); // Generate the initial generation of specimen.
 	analyseNewGeneration(0, experimentResultsFile, iteration); // Find best and worst specimen of the initial generation.
 
-	for (int i = 0; i < maxNumberOfGenerations; i++) {
+	// For as long as either a max generation hasn't been reached 
+	// or as long as the counter of generations since a new best solution value has been found hasn't reached 100,
+	// keep generating new generations.
+	for (int i = 0; i < maxNumberOfGenerations && generationsSinceNewBestSolutionFound < 100; i++) {
 		if (selectUsed == 'k') // For each generation in rank selection.
 		{
 			std::sort(allCurrentSpecimen.begin(), allCurrentSpecimen.end(), compareSpecimen); // If the select is rank selection, rank specimen accordingly.
@@ -153,6 +158,10 @@ void geneticCVRP::analyseNewGeneration(int generationNumber, std::ofstream &expe
 
 	if (newBestSpecimenFound) { // If a new best total cost has been found.
 		setBestSpecimenInfo(bestSpecimenIndex); // Save its information.
+		generationsSinceNewBestSolutionFound = 0; // Reset the counter.
+	}
+	else { // If a new best solution hasn't been found this generation.
+		generationsSinceNewBestSolutionFound++; // Increment the counter.
 	}
 
 	// Save information to generation results file.

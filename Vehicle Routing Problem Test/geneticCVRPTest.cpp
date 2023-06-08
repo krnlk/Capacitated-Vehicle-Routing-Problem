@@ -122,17 +122,37 @@ TEST_F(geneticCVRPTest, GenerateInitialSpecimenTest) {
 	EXPECT_EQ(geneticCVRP.allCurrentSpecimen[2].pointOrder.size(), 16);
 }
 
-// meh
 TEST_F(geneticCVRPTest, AnalyseNewGenerationTest) {
 	std::ifstream experimentFile;
 	std::ofstream experimentResultsFile;
-	experimentFile.open("Experiments/experiment.txt");
+	geneticCVRP.generationsSinceNewBestSolutionFound = 0;
+	experimentFile.open("Experiments/experiment2.txt");
+	experimentResultsFile.open("Experiments/generationResults.txt");
 	geneticCVRP.setAlgorithmParameters(experimentFile);
 	experimentFile.close();
 
 	geneticCVRP.currentInstanceFile.calculateDistancesBetweenPoints();
+
+	for (int i = 0; i < geneticCVRP.currentInstanceFile.dimension; i++) {
+		geneticCVRP.bestFoundSolutionPointOrder.push_back(0);
+	}
+
 	geneticCVRP.generateInitialSpecimen();
+	
+	EXPECT_EQ(geneticCVRP.allCurrentSpecimen.size(), 4);
+	EXPECT_NE(geneticCVRP.allCurrentSpecimen[0].getTotalCost(), INT_MAX);
+	EXPECT_NE(geneticCVRP.allCurrentSpecimen[1].getTotalCost(), INT_MAX);
+	EXPECT_NE(geneticCVRP.allCurrentSpecimen[2].getTotalCost(), INT_MAX);
+	EXPECT_NE(geneticCVRP.allCurrentSpecimen[3].getTotalCost(), INT_MAX);
+
+	for (int i = 0; i < instanceFile.dimension; i++) {
+		for (int j = 0; j < geneticCVRP.allCurrentSpecimen.size(); j++) {
+			EXPECT_NE(geneticCVRP.allCurrentSpecimen[j].getPointByIndex(i), -1);
+		}
+	}
+
 	geneticCVRP.analyseNewGeneration(0, experimentResultsFile, 0);
+	experimentResultsFile.close();
 }
 
 TEST_F(geneticCVRPTest, CreateNewOffspringTest) {

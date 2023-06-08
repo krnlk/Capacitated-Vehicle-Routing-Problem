@@ -4,67 +4,67 @@
 #include "Filepath.h"
 
 // Returns the relative directory and the file name of the settings file.
-std::string filepath::getSettingsFile()
+std::string filepath::getSettingsFile() const
 {
 	return this->settingsPath + this->settingsFileName;
 }
 
 // Returns the relative directory of the initialisation file.
-std::string filepath::getInitialisationPath()
+std::string filepath::getInitialisationPath() const
 {
 	return this->initialisationPath;
 }
 
 // Returns the file name of the initialisation file.
-std::string filepath::getInitialisationFileName()
+std::string filepath::getInitialisationFileName() const
 {
 	return this->initialisationFileName;
 }
 
 // Returns the relative directory and the file name of the initialisation file.
-std::string filepath::getInitialisationFile()
+std::string filepath::getInitialisationFile() const
 {
 	return this->initialisationPath + this->initialisationFileName;
 }
 
 // Returns the relative directory where the instance files are located.
-std::string filepath::getInstancesPath()
+std::string filepath::getInstancesPath() const
 {
 	return this->instancesPath;
 }
 
 // Returns the relative directory of the output file.
-std::string filepath::getOutputPath()
+std::string filepath::getOutputPath() const
 {
 	return this->outputPath;
 }
 
 // Returns the file name of the output file.
-std::string filepath::getOutputFileName()
+std::string filepath::getOutputFileName() const
 {
 	return this->outputFileName;
 }
 
 // Returns the relative directory and the file name of the output file.
-std::string filepath::getOutputFile()
+std::string filepath::getOutputFile() const
 {
 	return this->outputPath + this->outputFileName;
 }
 
 // Returns the relative directory of the generation results output file.
-std::string filepath::getGenerationResultsPath()
+std::string filepath::getGenerationResultsPath() const
 {
 	return this->generationResultsPath;
 }
 
 // Returns the file name of the generation results output file.
-std::string filepath::getGenerationResultsFileName()
+std::string filepath::getGenerationResultsFileName() const
 {
 	return this->generationResultsFileName;
 }
 
 // Returns the relative directory and the file name of the generation results output file.
-std::string filepath::getGenerationResultsFile()
+std::string filepath::getGenerationResultsFile() const
 {
 	return this->generationResultsPath + this->generationResultsFileName;
 }

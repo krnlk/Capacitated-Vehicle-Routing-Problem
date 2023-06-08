@@ -45,7 +45,7 @@ void greedyCVRP::ignoreInitialAlgorithmParameters(std::ifstream &experimentFile)
 }
 
 // Find the next best point to go to using greedy algorithm.
-void greedyCVRP::findNextPoint(instanceFile instanceFile) {
+void greedyCVRP::findNextPoint(const instanceFile& instanceFile) {
     int lowestCostPointIndex = -1;
     int lowestCostPoint = 0;
     int lowestCost = INT_MAX;

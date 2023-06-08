@@ -5,19 +5,19 @@
 #include "instanceFile.h"
 
 // Returns file name of this instance file.
-std::string instanceFile::getFileName()
+std::string instanceFile::getFileName() const
 {
 	return this->fileName;
 }
 
 // Returns best known value of an cVRP algorithm for this instance file.
-int instanceFile::getOptimalValue()
+int instanceFile::getOptimalValue() const
 {
 	return this->optimalValue;
 }
 
 // Returns subroute's maximum capacity for this instance file.
-int instanceFile::getMaxCapacity()
+int instanceFile::getMaxCapacity() const
 {
 	return this->maxCapacity;
 }

@@ -15,16 +15,16 @@ class cVRPSolution
 										// means that point number 4 can be found in pointOrder[6].
 		bool pointLocationSet = false; // Information about whether points have had their locations assigned in the pointLocation vector.
 
-		int getTotalCost(); // Get total cost of this solution.
-		int getPointByIndex(int index); // Get a point from this solution by index.
-		std::string getStringifiedPointOrder(); // Get point order of this solution saved to a string variable.
-		std::vector<int> getPointsOnARoute(instanceFile instanceFile); // Construct a full route (with subroutes).
+		int getTotalCost() const; // Get total cost of this solution.
+		int getPointByIndex(int index) const; // Get a point from this solution by index.
+		std::string getStringifiedPointOrder() const; // Get point order of this solution saved to a string variable.
+		std::vector<int> getPointsOnARoute(const instanceFile& instanceFile) const; // Construct a full route (with subroutes).
 
-		void setPointLocations(instanceFile instanceFile); // Set each point's location if it hasn't been set already.
+		void setPointLocations(const instanceFile& instanceFile); // Set each point's location if it hasn't been set already.
 		void setPointOrder(std::vector<int>& pointOrder); // Set point order of this solution.
 		void clearPointOrder(); // Clear point order of this solution.
 
-		int calculateTotalCost(instanceFile instanceFile); // Calculate the total cost of this solution.
-		void generateRandomRoute(instanceFile instanceFile, std::vector<int>& pointOrder); // Generate a random route by shuffling the order of points around.
+		int calculateTotalCost(const instanceFile& instanceFile); // Calculate the total cost of this solution.
+		void generateRandomRoute(const instanceFile& instanceFile, std::vector<int>& pointOrder); // Generate a random route by shuffling the order of points around.
 };
 

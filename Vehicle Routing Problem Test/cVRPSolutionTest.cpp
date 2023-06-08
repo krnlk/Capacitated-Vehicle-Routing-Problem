@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "../Vehicle Routing Problem/instanceFile.h"
+#include "../Vehicle Routing Problem/instanceFile.cpp"
 #include "../Vehicle Routing Problem/cVRPSolution.h"
 
 class cVRPSolutionTest : public ::testing::Test {

@@ -7,18 +7,18 @@
 #include "pseudoRandomGeneration.h"
 
 // Get total cost of this solution.
-int cVRPSolution::getTotalCost() {
+int cVRPSolution::getTotalCost() const {
     return totalCost;
 }
 
 // Get a point from this solution by index.
-int cVRPSolution::getPointByIndex(int index)
+int cVRPSolution::getPointByIndex(int index) const
 {
     return pointOrder[index];
 }
 
 // Get point order of this solution saved to a string variable.
-std::string cVRPSolution::getStringifiedPointOrder() {
+std::string cVRPSolution::getStringifiedPointOrder() const {
     std::stringstream stringifiedPointOrder;
     for (auto iterator = pointOrder.begin(); iterator != pointOrder.end(); iterator++) {
         if (iterator != pointOrder.begin()) {
@@ -32,7 +32,7 @@ std::string cVRPSolution::getStringifiedPointOrder() {
 // Construct a full route (including subroutes, which are separated by "0", marking return to the depot).
 // The subroutes are determined by going through the array of visited points in order and adding up the capacity of current subroute.
 // Once there's not enough capacity for the next point, insert return to depot and start constructing a new subroute.
-std::vector<int> cVRPSolution::getPointsOnARoute(instanceFile instanceFile) {
+std::vector<int> cVRPSolution::getPointsOnARoute(const instanceFile& instanceFile) const {
     std::vector<int> pointsOnARoute;
 
     int currentCapacity = 0;
@@ -52,7 +52,6 @@ std::vector<int> cVRPSolution::getPointsOnARoute(instanceFile instanceFile) {
     }
 
     if (currentCapacity != 0) { // Connect the last point in specimen with a depot if it hasn't been connected already.
-        totalCost += instanceFile.distanceBetweenPoints[instanceFile.dimension - 1][pointOrder[0]];
         currentCapacity = 0;
         pointsOnARoute.push_back(0);
     }
@@ -61,7 +60,7 @@ std::vector<int> cVRPSolution::getPointsOnARoute(instanceFile instanceFile) {
 }
 
 // Set each point's location if it hasn't been set already.
-void cVRPSolution::setPointLocations(instanceFile instanceFile) {
+void cVRPSolution::setPointLocations(const instanceFile& instanceFile) {
     if (pointLocationSet == true) { // If points have had their locations assigned already.
         return;
     }
@@ -87,7 +86,7 @@ void cVRPSolution::clearPointOrder() {
 
 // Calculate the total cost of this solution by travelling from point to point until a capacity limit is reached
 // and then returning to the depot. Repeat the process until there are no more points left to visit.
-int cVRPSolution::calculateTotalCost(instanceFile instanceFile) {
+int cVRPSolution::calculateTotalCost(const instanceFile& instanceFile) {
     totalCost = 0;
     int currentCapacity = 0;
 
@@ -118,7 +117,7 @@ int cVRPSolution::calculateTotalCost(instanceFile instanceFile) {
 }
 
 // Generate a random route by shuffling the order of points around.
-void cVRPSolution::generateRandomRoute(instanceFile instanceFile, std::vector<int>& pointOrder) {
+void cVRPSolution::generateRandomRoute(const instanceFile& instanceFile, std::vector<int>& pointOrder) {
     unsigned rnd = time(NULL) * getRand(0, 9999); // Creates a random formula for shuffling.
 
     std::shuffle(pointOrder.begin() + 1, pointOrder.end(), std::default_random_engine(rnd)); // Shuffle the order of points on a route (don't shuffle depot).

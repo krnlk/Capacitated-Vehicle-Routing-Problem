@@ -5,22 +5,22 @@
 #include "point.h"
 
 // Get index of this point.
-int point::getIndex() {
+int point::getIndex() const {
 	return this->index;
 }
 
 // Get X coordinate of this point.
-int point::getPositionX() {
+int point::getPositionX() const {
 	return this->positionX;
 }
 
 // Get Y coordinate of this point.
-int point::getPositionY() {
+int point::getPositionY() const {
 	return this->positionY;
 }
 
 // Get weight of this point.
-int point::getWeight() {
+int point::getWeight() const {
 	return this->weight;
 }
 
@@ -41,7 +41,7 @@ void point::setWeight(int weight) {
 }
 
 // Calculate distance from this point to another point. 
-int point::getDistanceToAnotherPoint(point anotherPoint) {
+int point::getDistanceToAnotherPoint(point anotherPoint) const {
 	double distanceX = pow(std::max(this->positionX, anotherPoint.getPositionX()) - std::min(this->positionX, anotherPoint.getPositionX()), 2);
 	double distanceY = pow(std::max(this->positionY, anotherPoint.getPositionY()) - std::min(this->positionY, anotherPoint.getPositionY()), 2);
 

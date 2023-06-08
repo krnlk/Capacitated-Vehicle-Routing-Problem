@@ -24,21 +24,21 @@ class filepath
 	void loadSettingsFileError(); // Create a new settings file, open it, save default settings into it and then close it.
 
 public:
-	std::string getSettingsFile(); // Returns the relative directory of the settings file.
+	std::string getSettingsFile() const; // Returns the relative directory of the settings file.
 
-	std::string getInitialisationPath(); // Returns the relative directory of the initialisation file.
-	std::string getInitialisationFileName(); // Returns the file name of the initialisation file.
-	std::string getInitialisationFile(); // Returns the relative directory and the file name of the initialisation file.
+	std::string getInitialisationPath() const; // Returns the relative directory of the initialisation file.
+	std::string getInitialisationFileName() const; // Returns the file name of the initialisation file.
+	std::string getInitialisationFile() const; // Returns the relative directory and the file name of the initialisation file.
 
-	std::string getInstancesPath(); // Returns the relative directory where the instance files are located.
+	std::string getInstancesPath() const; // Returns the relative directory where the instance files are located.
 
-	std::string getOutputPath(); // Returns the relative directory of the output file.
-	std::string getOutputFileName(); // Returns the file name of the output file.
-	std::string getOutputFile(); // Returns the relative directory and the file name of the output file.
+	std::string getOutputPath() const; // Returns the relative directory of the output file.
+	std::string getOutputFileName() const; // Returns the file name of the output file.
+	std::string getOutputFile() const; // Returns the relative directory and the file name of the output file.
 
-	std::string getGenerationResultsPath(); // Returns the relative directory of the generation results output file.
-	std::string getGenerationResultsFileName(); // Returns the file name of the generation results output file.
-	std::string getGenerationResultsFile(); // Returns the relative directory and the file name of the generation results output file.
+	std::string getGenerationResultsPath() const; // Returns the relative directory of the generation results output file.
+	std::string getGenerationResultsFileName() const; // Returns the file name of the generation results output file.
+	std::string getGenerationResultsFile() const; // Returns the relative directory and the file name of the generation results output file.
 
 	void setInitialisationPath(std::string path);// Sets the relative directory of the initialisation file.
 	void setInitialisationFileName(std::string fileName); // Sets the file name of the initialisation file.

@@ -12,6 +12,8 @@ public:
 	int bestFoundSolutionTotalCost = INT_MAX; // Best found cost of a solution.
 	int worstFoundSolutionTotalCost = 0; // Worst found cost of a solution.
 
+	int generationsSinceNewBestSolutionFound = 0; // Counter used to measure how many generations have passed since a new best solution has been found.
+
 	int fitnessFunction; // Whether this is used or not depends on the select, used for measuring the value of fitness function.
 	int sumOfRanks; // Used in rank selection only.
 
@@ -73,10 +75,8 @@ public:
 	void mutateSwapOnSpecimen(int specimenIndex); // Mutation that swaps two random points in a specimen. Repeats multiple times.
 	void mutateInvertOnSpecimen(int specimenIndex); // Mutation that swaps all points between two points in a route. Only one mutation is performed per specimen.
 
-
-	//
-	int getBestFoundSolutionTotalCost(); // Get the cost of the solution with the lowest found cost.
-	std::string getBestFoundSolutionPointOrder(); // Get the point order of the solution with the lowest found cost.
+	int getBestFoundSolutionTotalCost() const; // Get the cost of the solution with the lowest found cost.
+	std::string getBestFoundSolutionPointOrder() const; // Get the point order of the solution with the lowest found cost.
 
 	void setAlgorithmParameters(std::ifstream& experimentParametersFile); // Read algorithm parameters from a file (assuming specific format).
 	void setInstanceFile(instanceFile instanceFile); // Set the instance file for this object.

@@ -4,18 +4,18 @@
 #include "pseudoRandomGeneration.h"
 
 // Returns a pseudo random value with uniform integer distribution using Mercenne Twister algorithm.
-int getRand(const int& A, const int& B) {
-    static std::random_device randDev;
-    static std::mt19937 twister(randDev()); 
-    static std::uniform_int_distribution<int> dist;
+int getRand(int A, int B) {
+    static std::random_device randDev; // Generate pseudo random numbers from hardware.
+    static std::mt19937 mercenneTwister(randDev()); // Mercenne Twister.
+    static std::uniform_int_distribution<int> dist; // Uniform integer distribution.
 
     dist.param(std::uniform_int_distribution<int>::param_type(A, B));
-    return dist(twister);
+    return dist(mercenneTwister);
 }
 
 // Returns a pair of unique pseudo random values with uniform integer distribution using Mercenne Twister algorithm.
 // First value in the pair will be no greater than the second pair.
-std::pair<int, int> getRandUniquePair(const int& a, const int& b)
+std::pair<int, int> getRandUniquePair(int a, int b)
 {
     std::pair<int, int> uniquePair; // Unique pair of integer values.
 
