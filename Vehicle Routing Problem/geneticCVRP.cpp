@@ -295,7 +295,7 @@ int geneticCVRP::rankSelection() {
 	probability /= 10000.0;
 
 	while (parentIndex < numberOfSpecimenInAGeneration) {
-		totalRankSum += (numberOfSpecimenInAGeneration - parentIndex) / (double)sumOfRanks; // Due to previous sorting.
+		totalRankSum += (double)(numberOfSpecimenInAGeneration - parentIndex) / (double)sumOfRanks; // Due to previous sorting.
 		if (totalRankSum > probability) {
 			return parentIndex;
 		}
@@ -316,7 +316,7 @@ std::pair<int, int> geneticCVRP::stochasticUniversalSamplingIndexes() {
 	double totalSpecimenValueSum;
 
 	do {
-		firstProbability = (getRand(0, 9999)) / 10000.0; // "Spin a wheel".
+		firstProbability = (getRand(0, 9999)) / 10000.0; // "Spin the wheel".
 		// Take a probability directly opposite to the first one "on the wheel".
 		secondProbability = firstProbability >= 0.5 ? firstProbability - 0.5 : firstProbability + 0.5;
 
@@ -346,7 +346,7 @@ std::pair<int, int> geneticCVRP::tournamentSelectionIndexes() {
 // Return a single parent index using tournament selection.
 int geneticCVRP::tournamentSelection() {
 	int parentIndex;
-	int numberOfTournamentParticipants = numberOfSpecimenInAGeneration / 10;
+	int numberOfTournamentParticipants = numberOfSpecimenInAGeneration / 10; // One tenth of the population will be participants of the tournament.
 	int randomParticipantIndex;
 
 	int bestParticipantValue;
@@ -359,9 +359,9 @@ int geneticCVRP::tournamentSelection() {
 	parentIndex = getRand(0, numberOfSpecimenInAGeneration - 1);
 	bestParticipantValue = allCurrentSpecimen[parentIndex].getTotalCost();
 
-	for (int i = 1; i < numberOfTournamentParticipants; i++) {
-		randomParticipantIndex = getRand(0, numberOfSpecimenInAGeneration - 1);
-		if (allCurrentSpecimen[randomParticipantIndex].getTotalCost() < bestParticipantValue) {
+	for (int i = 1; i < numberOfTournamentParticipants; i++) { // Keep generating new participants.
+		randomParticipantIndex = getRand(0, numberOfSpecimenInAGeneration - 1); // Select a random specimen.
+		if (allCurrentSpecimen[randomParticipantIndex].getTotalCost() < bestParticipantValue) { // Check if new participant is the best one.
 			bestParticipantValue = allCurrentSpecimen[randomParticipantIndex].getTotalCost();
 			parentIndex = randomParticipantIndex;
 		}
@@ -631,7 +631,12 @@ void geneticCVRP::mutate() {
 
 // Mutation that swaps two random points in a specimen. Repeats multiple times.
 void geneticCVRP::mutateSwapOnSpecimen(int specimenIndex) {
-	int amountOfMutations = currentInstanceFile.dimension; // How many times should mutations happen.
+	int amountOfMutations = currentInstanceFile.dimension * 2 / 3 * (1.0 / currentInstanceFile.dimension); // How many times should mutations happen.
+
+	if (amountOfMutations == 0) { // In case of a very small instance file.
+		amountOfMutations = 1; // Make sure at least one mutation will happen.
+	}
+
 	std::pair<int, int> mutationPair; // Indexes of points which will be mutated.
 
 	for (int i = 0; i < amountOfMutations; i++) { // Mutate multiple times.
