@@ -43,7 +43,7 @@ TEST_F(geneticCVRPTestMutation, MutateInvertOnSpecimenTest1) {
 TEST_F(geneticCVRPTestMutation, MutateInvertOnSpecimenTest2) {
 	std::pair<int, int> mutationPair = { 1, 15 };
 	std::vector<int> pointOrder = { 0, 1, 15, 2, 14, 3, 13, 4, 12, 5, 11, 6, 10, 7, 9, 8 };
-	std::vector<int> newPointOrder = { 0, 8, 9, 7, 10, 6, 11, 5, 12, 4, 13, 3, 14, 2, 15, 1};
+	std::vector<int> newPointOrder = { 0, 8, 9, 7, 10, 6, 11, 5, 12, 4, 13, 3, 14, 2, 15, 1 };
 	specimen.setPointOrder(pointOrder);
 	geneticCVRP.allCurrentSpecimen.push_back(specimen);
 	geneticCVRP.allCurrentSpecimen[0].mutateInvert(mutationPair);

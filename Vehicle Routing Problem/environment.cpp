@@ -10,7 +10,7 @@
 #include "pseudoRandomGeneration.h"
 
 // Used for tracking time.
-long long int read_QPC() 
+long long int read_QPC()
 {
 	LARGE_INTEGER count;
 	QueryPerformanceCounter(&count);
@@ -24,7 +24,7 @@ void environment::geneticAlgorithmExperiment(filepath filepath) {
 	geneticCVRP geneticCVRP;
 	std::ofstream generationResultsFile;
 
-	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency); 
+	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 
 	experimentFile.open(filepath.getInitialisationFile()); // Open input and output files.
 	testResultsFile.open(filepath.getOutputFile());
@@ -51,7 +51,7 @@ void environment::geneticAlgorithmExperiment(filepath filepath) {
 
 // A full set of repetitions of the geneticCVRP algorithm for one instance file.
 // Amount of repetitions is defined by the instanceRepeats value in the experiment file.
-void environment::geneticAlgorithmInstanceFileRepetitions(filepath filepath, geneticCVRP &geneticCVRP, std::ofstream &generationResultsFile) {
+void environment::geneticAlgorithmInstanceFileRepetitions(filepath filepath, geneticCVRP& geneticCVRP, std::ofstream& generationResultsFile) {
 	experimentFile >> instanceFileName >> instanceRepeats;
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
 	geneticCVRP.setInstanceFile(instanceFile); // Set file used by algorithm.
@@ -68,7 +68,7 @@ void environment::geneticAlgorithmInstanceFileRepetitions(filepath filepath, gen
 		geneticCVRP.mainAlgorithmLoop(generationResultsFile, i + 1);
 		elapsed = read_QPC() - start; // Stop tracking time.
 		// After the algorithm is over, save the results to a file.
-		averageError += ((geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+		averageError += (((double)geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
 		averageTime += (elapsed / (double)frequency);
 		averageSolution += geneticCVRP.getBestFoundSolutionTotalCost();
 
@@ -91,7 +91,7 @@ void environment::geneticAlgorithmInstanceFileRepetitions(filepath filepath, gen
 // Print out error messages to mark files which couldn't be properly opened.
 // Mandatory to pass ofstream as an argument using a reference, as it has no copy constructor.
 // Genetic and random algorithms only.
-void environment::geneticOrRandomAlgorithmFileOpenError(filepath filepath, std::ofstream &generationResultsFile) {
+void environment::geneticOrRandomAlgorithmFileOpenError(filepath filepath, std::ofstream& generationResultsFile) {
 	if (!experimentFile.is_open()) {
 		std::cout << "Initialisation file " << filepath.getInitialisationFile() << " couldn't be opened." << std::endl;
 	}
@@ -140,7 +140,7 @@ void environment::randomAlgorithmExperiment(filepath filepath) {
 
 // A full set of repetitions of the randomCVRP algorithm for one instance file.
 // Amount of repetitions is defined by the instanceRepeats value in the experiment file.
-void environment::randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP &randomCVRP, std::ofstream &iterationResultsFile, unsigned rnd) {
+void environment::randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP& randomCVRP, std::ofstream& iterationResultsFile, unsigned rnd) {
 	experimentFile >> instanceFileName >> instanceRepeats;
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
 
@@ -153,7 +153,7 @@ void environment::randomAlgorithmInstanceFileRepetitions(filepath filepath, rand
 		randomCVRP.generateASolution(instanceFile, iterationResultsFile, i, rnd);
 		elapsed = read_QPC() - start; // Stop tracking time.
 		// After the algorithm is over, save the results to a file.
-		averageError += ((randomCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+		averageError += (((double)randomCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
 		averageTime += (elapsed / (double)frequency);
 		averageSolution += randomCVRP.getTotalCost();
 
@@ -228,7 +228,7 @@ void environment::greedyAlgorithmInstanceFileRepetitions(filepath filepath, gree
 	greedyCVRP.generateASolution(instanceFile);
 	elapsed = read_QPC() - start; // Stop tracking time.
 
-	averageError = ((greedyCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+	averageError = (((double)greedyCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
 	averageTime = (elapsed / (double)frequency);
 
 	testResultsFile << instanceFileName << ";" << instanceFile.getOptimalValue() << ";" << greedyCVRP.getTotalCost()

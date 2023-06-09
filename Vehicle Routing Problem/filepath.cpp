@@ -128,7 +128,7 @@ void filepath::loadSettingsFile()
 }
 
 // Load information from the settings file, assuming a specific format.
-void filepath::loadSettingsFileSuccess(std::fstream &settingsFile) {
+void filepath::loadSettingsFileSuccess(std::fstream& settingsFile) {
 	std::getline(settingsFile, this->initialisationPath);
 	std::getline(settingsFile, this->initialisationFileName);
 	std::getline(settingsFile, this->instancesPath);
@@ -151,7 +151,7 @@ void filepath::loadSettingsFileSuccess(std::fstream &settingsFile) {
 // Create a new settings file, open it, save default settings into it and then close it.
 void filepath::loadSettingsFileError() {
 	std::ofstream newSettingsFile; // Create a new settings file.
-	newSettingsFile.open(this->getSettingsFile()); 
+	newSettingsFile.open(this->getSettingsFile());
 
 	newSettingsFile << "INITIALISATION_PATH : " + this->initialisationPath << std::endl
 		<< "INITIALISATION_FILE_NAME : " + this->initialisationFileName << std::endl

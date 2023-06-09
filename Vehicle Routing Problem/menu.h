@@ -25,7 +25,7 @@ class menu
 
 	void changesDialogue(); // Menu for changing files.
 	void printChangesMenu(); // Print the options of menu for changing files.
-	void changesMenuSwitch(bool &exitChangeSettings); // Read user's input and choose one of the options from menu for changing files based on it (or terminate the program).
+	void changesMenuSwitch(bool& exitChangeSettings); // Read user's input and choose one of the options from menu for changing files based on it (or terminate the program).
 
 	void changeInitialisationPath(); // Change the initialisation file path.
 	void changeIniitalisationFileName(); // Change the initialisation file name.

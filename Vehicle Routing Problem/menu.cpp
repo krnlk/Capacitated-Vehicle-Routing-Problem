@@ -114,7 +114,7 @@ void menu::checkSettings()
 }
 
 // Menu for changing files.
-void menu::changesDialogue() 
+void menu::changesDialogue()
 {
 	bool exitChangeSettings = false;
 
@@ -143,7 +143,7 @@ void menu::printChangesMenu()
 }
 
 // Read user's input and choose one of the options from menu for changing files based on it (or terminate the program).
-void menu::changesMenuSwitch(bool &exitChangeSettings)
+void menu::changesMenuSwitch(bool& exitChangeSettings)
 {
 	userInput = _getch(); // Read input from the keyboard without the user needing to press enter.
 

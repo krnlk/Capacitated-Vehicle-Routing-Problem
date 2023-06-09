@@ -11,8 +11,8 @@ class greedyCVRP : public cVRPSolution
 
 	void findNextPoint(const instanceFile& instanceFile); // Find the next best point to go to using greedy algorithm.
 
-	public:
-		void generateASolution(instanceFile instanceFile); // Generate a solution to an instance file using greedy cVRP algorithm.
-		void ignoreInitialAlgorithmParameters(std::ifstream &experimentFile); // Skip initialisation data that's not needed in greedy algorithm.
+public:
+	void generateASolution(instanceFile instanceFile); // Generate a solution to an instance file using greedy cVRP algorithm.
+	void ignoreInitialAlgorithmParameters(std::ifstream& experimentFile); // Skip initialisation data that's not needed in greedy algorithm.
 };
 

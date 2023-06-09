@@ -20,7 +20,7 @@ class filepath
 	std::string generationResultsPath = "Results/GeneticGenerations/"; // (Genetic algorithm) Path to the output file for each generation.
 	std::string generationResultsFileName = "generationResults.txt"; // (Genetic algorithm) Name of the file containing experiment generation output.
 
-	void loadSettingsFileSuccess(std::fstream &settingsFile); // Load information from the settings file, assuming a specific format.
+	void loadSettingsFileSuccess(std::fstream& settingsFile); // Load information from the settings file, assuming a specific format.
 	void loadSettingsFileError(); // Create a new settings file, open it, save default settings into it and then close it.
 
 public:

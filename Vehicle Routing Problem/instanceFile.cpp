@@ -40,7 +40,7 @@ void instanceFile::loadInstanceData(std::string path, std::string filename) {
 }
 
 // Load data from an instance file, assuming a specific file structure.
-void instanceFile::loadInstanceDataSuccess(std::ifstream &instanceFile) {
+void instanceFile::loadInstanceDataSuccess(std::ifstream& instanceFile) {
 	std::string textLine;
 	std::string textWord1, textWord2, textWord3;
 	int textNumber1, textNumber2, textNumber3;
@@ -100,11 +100,11 @@ void instanceFile::printInstanceData() {
 	std::cout << "Maximum capacity per route is: " << maxCapacity << std::endl;
 	std::cout << "This instance files consists of " << dimension << " points." << std::endl;
 
-	std::cout << "The depot is placed in coordinates (" << pointsVector[0].getPositionX() << ", " << pointsVector[0].getPositionY() 
+	std::cout << "The depot is placed in coordinates (" << pointsVector[0].getPositionX() << ", " << pointsVector[0].getPositionY()
 		<< "). Its demand is: " << pointsVector[0].getWeight() << std::endl << std::endl;
 
 	for (int i = 1; i < dimension; i++) {
-		std::cout << "The point number " << i << " is placed in coordinates (" << pointsVector[i].getPositionX() << ", " << pointsVector[i].getPositionY() 
+		std::cout << "The point number " << i << " is placed in coordinates (" << pointsVector[i].getPositionX() << ", " << pointsVector[i].getPositionY()
 			<< "). Its demand is: " << pointsVector[i].getWeight() << std::endl;
 	}
 }

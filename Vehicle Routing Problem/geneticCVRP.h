@@ -16,7 +16,7 @@ class geneticCVRP
 
 	int fitnessFunction; // Whether this is used or not depends on the select, used for measuring the value of fitness function.
 	int sumOfRanks; // Used in rank selection only.
-	
+
 	char selectUsed; // Character used to determine selection opeator used.
 	char crossoverUsed; // Character used to determine crossover operator used.
 	char mutationUsed; // Character used to determine mutation operator used.
@@ -24,7 +24,7 @@ class geneticCVRP
 	double mutationProbability; // Value used to represent a chance for a mutation to happen.
 	int numberOfSpecimenInAGeneration; // Value used to represent a number of specimen per generation.
 	int maxNumberOfGenerations; // Value used to represent the maximum amount of generations that will be simulated.
-	
+
 	std::vector<specimen> allCurrentSpecimen; // Vector of all specimen in the current generation.
 	std::vector<specimen> newGenerationOfSpecimen; // Vector of all specimen of the new generation (that's still being generated).
 
@@ -34,12 +34,12 @@ class geneticCVRP
 
 	void generateInitialSpecimen(); // Randomly generate initial specimen.
 
-	void analyseNewGeneration(int generationNumber, std::ofstream &experimentResultsFile, int iteration); // Find best specimen in the new generation.
+	void analyseNewGeneration(int generationNumber, std::ofstream& experimentResultsFile, int iteration); // Find best specimen in the new generation.
 
 	// Save information about average solution and potential new best solutions in this generation.
-	void findBestSpecimenInAGeneration(int index, int &averageSolutionTotalCost, int &currentGenerationBestFoundSolutionTotalCost, int &bestSpecimenIndex, bool &newBestSpecimenFound); 
+	void findBestSpecimenInAGeneration(int index, int& averageSolutionTotalCost, int& currentGenerationBestFoundSolutionTotalCost, int& bestSpecimenIndex, bool& newBestSpecimenFound);
 
-	void findWorstSpecimenInAGeneration(int index, int &currentGenerationWorstFoundSolutionTotalCost); // Save information about worst total cost in this generation.
+	void findWorstSpecimenInAGeneration(int index, int& currentGenerationWorstFoundSolutionTotalCost); // Save information about worst total cost in this generation.
 
 	void createNewOffspring(); // Generates a new generation of specimen.
 
@@ -74,7 +74,7 @@ class geneticCVRP
 	void mutate(); // Handle mutation of all offspring in new generation.
 	void mutateSwapOnSpecimen(int specimenIndex); // Mutation that swaps two random points in a specimen. Repeats multiple times.
 	void mutateInvertOnSpecimen(int specimenIndex); // Mutation that swaps all points between two points in a route. Only one mutation is performed per specimen.
-	
+
 public:
 	int getBestFoundSolutionTotalCost() const; // Get the cost of the solution with the lowest found cost.
 	std::string getBestFoundSolutionPointOrder() const; // Get the point order of the solution with the lowest found cost.

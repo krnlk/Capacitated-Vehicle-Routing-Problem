@@ -26,7 +26,7 @@ std::string geneticCVRP::getBestFoundSolutionPointOrder() const {
 }
 
 // Read algorithm parameters from a file (assuming specific format).
-void geneticCVRP::setAlgorithmParameters(std::ifstream &experimentFile)
+void geneticCVRP::setAlgorithmParameters(std::ifstream& experimentFile)
 {
 	std::string textLine;
 
@@ -144,8 +144,8 @@ void geneticCVRP::generateInitialSpecimen() {
 
 // Find best specimen in the new generation and check, if it's better than the best found specimen across all previous generations.
 // Find the worst cost of a specimen in new generation.
-void geneticCVRP::analyseNewGeneration(int generationNumber, std::ofstream &experimentResultsFile, int iteration) {
-	int bestSpecimenIndex; 
+void geneticCVRP::analyseNewGeneration(int generationNumber, std::ofstream& experimentResultsFile, int iteration) {
+	int bestSpecimenIndex;
 	int averageSolutionTotalCost = 0; // Average of total costs of all solution in a particular generation.
 	int currentGenerationWorstFoundSolutionTotalCost = 0;
 	int currentGenerationBestFoundSolutionTotalCost = INT_MAX; // Total cost of the best solution found (current generation only).
@@ -166,13 +166,13 @@ void geneticCVRP::analyseNewGeneration(int generationNumber, std::ofstream &expe
 
 	// Save information to generation results file.
 	experimentResultsFile << currentInstanceFile.getFileName() << ";" << iteration << ";" << generationNumber << ";" <<
-		bestFoundSolutionTotalCost << ";" << worstFoundSolutionTotalCost << ";" << 
+		bestFoundSolutionTotalCost << ";" << worstFoundSolutionTotalCost << ";" <<
 		averageSolutionTotalCost / numberOfSpecimenInAGeneration << ";" <<
 		currentGenerationBestFoundSolutionTotalCost << ";" << currentGenerationWorstFoundSolutionTotalCost << std::endl;
 }
 
 // Save information about average solution and potential new best solutions in this generation.
-void geneticCVRP::findBestSpecimenInAGeneration(int index, int &averageSolutionTotalCost, int &currentGenerationBestFoundSolutionTotalCost, int &bestSpecimenIndex, bool &newBestSpecimenFound) {
+void geneticCVRP::findBestSpecimenInAGeneration(int index, int& averageSolutionTotalCost, int& currentGenerationBestFoundSolutionTotalCost, int& bestSpecimenIndex, bool& newBestSpecimenFound) {
 	allCurrentSpecimen[index].calculateTotalCost(currentInstanceFile);
 	averageSolutionTotalCost += allCurrentSpecimen[index].getTotalCost();
 
@@ -188,7 +188,7 @@ void geneticCVRP::findBestSpecimenInAGeneration(int index, int &averageSolutionT
 }
 
 // Save information about worst total cost in this generation.
-void geneticCVRP::findWorstSpecimenInAGeneration(int index, int &currentGenerationWorstFoundSolutionTotalCost) {
+void geneticCVRP::findWorstSpecimenInAGeneration(int index, int& currentGenerationWorstFoundSolutionTotalCost) {
 	if (allCurrentSpecimen[index].getTotalCost() > currentGenerationWorstFoundSolutionTotalCost) { // Check if current specimen is worst in current generation.
 		currentGenerationWorstFoundSolutionTotalCost = allCurrentSpecimen[index].getTotalCost();
 
@@ -295,7 +295,7 @@ int geneticCVRP::rankSelection() {
 	probability /= 10000.0;
 
 	while (parentIndex < numberOfSpecimenInAGeneration) {
-		totalRankSum += (double)(numberOfSpecimenInAGeneration - parentIndex) / (double)sumOfRanks; // Due to previous sorting.
+		totalRankSum += ((double)numberOfSpecimenInAGeneration - parentIndex) / (double)sumOfRanks; // Due to previous sorting.
 		if (totalRankSum > probability) {
 			return parentIndex;
 		}
@@ -393,7 +393,8 @@ std::pair<int, int> geneticCVRP::rouletteWheelSelectionIndexes() {
 // Return a single parent index using rank selection.
 int geneticCVRP::rouletteWheelSelection(int parentIndex, double& totalSpecimenValueSum, double probability) {
 	while (parentIndex < numberOfSpecimenInAGeneration) {
-		totalSpecimenValueSum += (worstFoundSolutionTotalCost - allCurrentSpecimen[parentIndex].getTotalCost()) / (double)fitnessFunction; // Casting to double to avoid dividing integer by integer.
+		// Casting to double to avoid dividing integer by integer.
+		totalSpecimenValueSum += ((double)worstFoundSolutionTotalCost - allCurrentSpecimen[parentIndex].getTotalCost()) / (double)fitnessFunction;
 		if (totalSpecimenValueSum > probability) {
 			return parentIndex;
 		}
@@ -409,22 +410,22 @@ void geneticCVRP::selectCrossover(int firstParentIndex, int secondParentIndex) {
 	std::pair<int, int> parentIndexPair; // Setting up cutoff points for ordered crossover selection.
 
 	switch (crossoverUsed) { // Select crossover that's currently used in the experiment.
-		case 'c': // Cycle crossover.
-			cycleCrossover(firstParentIndex, secondParentIndex);
-			break;
+	case 'c': // Cycle crossover.
+		cycleCrossover(firstParentIndex, secondParentIndex);
+		break;
 
-		case 'o': // Ordered crossover.
-			parentIndexPair = getRandUniquePair(1, currentInstanceFile.dimension - 1); // Get two different cutoff indexes.
-			// Create two new specimen using ordered crossover.
-			newGenerationOfSpecimen.push_back(orderedCrossover(firstParentIndex, secondParentIndex, parentIndexPair.first, parentIndexPair.second));
-			newGenerationOfSpecimen.push_back(orderedCrossover(secondParentIndex, firstParentIndex, parentIndexPair.first, parentIndexPair.second));			break;
+	case 'o': // Ordered crossover.
+		parentIndexPair = getRandUniquePair(1, currentInstanceFile.dimension - 1); // Get two different cutoff indexes.
+		// Create two new specimen using ordered crossover.
+		newGenerationOfSpecimen.push_back(orderedCrossover(firstParentIndex, secondParentIndex, parentIndexPair.first, parentIndexPair.second));
+		newGenerationOfSpecimen.push_back(orderedCrossover(secondParentIndex, firstParentIndex, parentIndexPair.first, parentIndexPair.second));			break;
 
-		case 'p': // Partially mapped crossover.
-			partiallyMappedCrossoverCutoffsSetup(firstParentIndex, secondParentIndex);
-			break;
+	case 'p': // Partially mapped crossover.
+		partiallyMappedCrossoverCutoffsSetup(firstParentIndex, secondParentIndex);
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
@@ -608,7 +609,7 @@ int geneticCVRP::findValueInsideParent(int valueIndex, int firstParentIndex, int
 // Handle mutation of all offspring in new generation.
 void geneticCVRP::mutate() {
 	int probability; // Determines whether a mutation will happen or not.
-	
+
 	for (int i = 0; i < numberOfSpecimenInAGeneration; i++) { // For each offspring.
 		probability = getRand(0, 99);
 
@@ -622,7 +623,7 @@ void geneticCVRP::mutate() {
 				mutateInvertOnSpecimen(i); // Mutate the specimen with index i.
 				break;
 
-			default: 
+			default:
 				break;
 			}
 		}
