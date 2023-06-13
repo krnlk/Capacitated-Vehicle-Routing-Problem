@@ -10,6 +10,7 @@ class instanceFile
 	std::string fileName; // Name of the instance file.
 	int optimalValue; // Best known value of the cVRP solution for this instance file.
 	int maxCapacity; // Subroute's maximum capacity for this instance file.
+	bool isOpen; // Boolean value representing whether instance file is open or not.
 
 	void loadInstanceDataSuccess(std::ifstream& instanceFile); // Load data from an instance file, assuming a specific file structure.
 
@@ -21,6 +22,7 @@ public:
 	std::string getFileName() const; // Returns file name of this instance file.
 	int getOptimalValue() const; // Returns best known value of an cVRP algorithm for this instance file.
 	int getMaxCapacity() const; // Returns subroute's maximum capacity for this instance file.
+	bool getIsFileOpen() const; // Returns information about whether instance file is open or not.
 
 	void loadInstanceData(std::string path, std::string filename); // Open an instance file and load its data.
 

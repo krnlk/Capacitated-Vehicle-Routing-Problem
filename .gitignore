@@ -365,3 +365,5 @@ FodyWeavers.xsd
 # Defined by user
 **/Results
 **/Tuning
+/Vehicle Routing Problem/ClassDiagram.cd
+/Vehicle Routing Problem/tree.txt

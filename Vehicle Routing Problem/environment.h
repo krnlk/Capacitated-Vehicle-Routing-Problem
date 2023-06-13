@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "instanceFile.h"
-#include "Filepath.h"
+#include "filepath.h"
 #include "geneticCVRP.h"
 #include "randomCVRP.h"
 #include "greedyCVRP.h"

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "Filepath.h"
+#include "filepath.h"
 
 // Returns the relative directory and the file name of the settings file.
 std::string filepath::getSettingsFile() const

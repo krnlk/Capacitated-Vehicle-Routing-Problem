@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include "Filepath.h"
+#include "filepath.h"
 #include "environment.h"
 
 // This class serves as a user interface that is used to access other features of the application.

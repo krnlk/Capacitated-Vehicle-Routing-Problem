@@ -3,7 +3,6 @@
 
 #include "specimen.h"
 #include "instanceFile.h"
-#include "pseudoRandomGeneration.h"
 
 // Mutation operator - swap.
 // Swap the order of two randomly selected points in this specimen.

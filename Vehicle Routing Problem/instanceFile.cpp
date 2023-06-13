@@ -22,6 +22,12 @@ int instanceFile::getMaxCapacity() const
 	return this->maxCapacity;
 }
 
+// Returns information about whether instance file is open or not.
+bool instanceFile::getIsFileOpen() const
+{
+	return this->isOpen;
+}
+
 // Open an instance file and load its data.
 void instanceFile::loadInstanceData(std::string path, std::string filename) {
 	std::ifstream instanceFile;
@@ -31,9 +37,11 @@ void instanceFile::loadInstanceData(std::string path, std::string filename) {
 	instanceFile.open(path + filename);
 
 	if (instanceFile.is_open()) { // If the instance file has been succesfully opened.
+		this->isOpen = true;
 		this->loadInstanceDataSuccess(instanceFile);
 	}
 	else { // If the instance file couldn't be found or opened.
+		this->isOpen = false;
 		std::cout << "Error - couldn't open the instance file " << filename << "." << std::endl;
 		std::cout << "Skipping ahead to the next instance file." << std::endl;
 	}

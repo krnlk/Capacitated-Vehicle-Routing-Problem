@@ -6,7 +6,7 @@
 #include "geneticCVRP.h"
 #include "greedyCVRP.h"
 #include "randomCVRP.h"
-#include "Filepath.h"
+#include "filepath.h"
 #include "pseudoRandomGeneration.h"
 
 // Used for tracking time.
@@ -56,36 +56,38 @@ void environment::geneticAlgorithmInstanceFileRepetitions(filepath filepath, gen
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
 	geneticCVRP.setInstanceFile(instanceFile); // Set file used by algorithm.
 
-	overallBestSolutionFound = INT_MAX;
+	if (instanceFile.getIsFileOpen()) {
+		overallBestSolutionFound = INT_MAX;
 
-	averageError = 0.0;
-	averageTime = 0.0;
-	averageSolution = 0.0;
+		averageError = 0.0;
+		averageTime = 0.0;
+		averageSolution = 0.0;
 
-	for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
-		geneticCVRP.clearInfo(); // Clear best found solution and its order from the previous run.
-		start = read_QPC(); // Start tracking time.
-		geneticCVRP.mainAlgorithmLoop(generationResultsFile, i + 1);
-		elapsed = read_QPC() - start; // Stop tracking time.
-		// After the algorithm is over, save the results to a file.
-		averageError += (((double)geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
-		averageTime += (elapsed / (double)frequency);
-		averageSolution += geneticCVRP.getBestFoundSolutionTotalCost();
+		for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
+			geneticCVRP.clearInfo(); // Clear best found solution and its order from the previous run.
+			start = read_QPC(); // Start tracking time.
+			geneticCVRP.mainAlgorithmLoop(generationResultsFile, i + 1);
+			elapsed = read_QPC() - start; // Stop tracking time.
+			// After the algorithm is over, save the results to a file.
+			averageError += (((double)geneticCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+			averageTime += (elapsed / (double)frequency);
+			averageSolution += geneticCVRP.getBestFoundSolutionTotalCost();
 
-		if (geneticCVRP.getBestFoundSolutionTotalCost() < overallBestSolutionFound) {
-			overallBestSolutionFound = geneticCVRP.getBestFoundSolutionTotalCost();
-			bestFoundRoutePath = geneticCVRP.getBestFoundSolutionPointOrder();
+			if (geneticCVRP.getBestFoundSolutionTotalCost() < overallBestSolutionFound) {
+				overallBestSolutionFound = geneticCVRP.getBestFoundSolutionTotalCost();
+				bestFoundRoutePath = geneticCVRP.getBestFoundSolutionPointOrder();
+			}
+
+			std::cout << "Iteration number " << i + 1 << " of instance file " << instanceFileName << " has finished." << std::endl;
 		}
 
-		std::cout << "Iteration number " << i + 1 << " of instance file " << instanceFileName << " has finished." << std::endl;
+		averageError = averageError / (double)instanceRepeats;
+		averageTime = averageTime / (double)instanceRepeats;
+		averageSolution = averageSolution / (double)instanceRepeats;
+
+		testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
+			<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
 	}
-
-	averageError = averageError / (double)instanceRepeats;
-	averageTime = averageTime / (double)instanceRepeats;
-	averageSolution = averageSolution / (double)instanceRepeats;
-
-	testResultsFile << instanceFileName << ";" << instanceRepeats << ";" << instanceFile.getOptimalValue() << ";" << overallBestSolutionFound
-		<< ";" << bestFoundRoutePath << ";" << averageError * 100.00 << "%" << ";" << averageTime << ";" << averageSolution << std::endl;
 }
 
 // Print out error messages to mark files which couldn't be properly opened.
