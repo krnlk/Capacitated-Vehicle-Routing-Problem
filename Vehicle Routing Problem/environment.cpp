@@ -122,13 +122,13 @@ void environment::randomAlgorithmExperiment(filepath filepath) {
 	iterationResultsFile.open(filepath.getGenerationResultsFile());
 
 	if (experimentFile.is_open() && testResultsFile.is_open() && iterationResultsFile.is_open()) { // If all files have been opened succesfully.
-		randomCVRP.ignoreInitialAlgorithmParameters(experimentFile); // 
+		randomCVRP.ignoreInitialAlgorithmParameters(experimentFile);
 
 		testResultsFile << "instance file;instance repeats;best known route cost;best found route cost;best found route path;average error;average time [s];average best solution" << std::endl;
-		iterationResultsFile << "file name;iteration;iteration;total cost" << std::endl;
+		iterationResultsFile << "file name;iteration;generation;minimum solution cost so far;maximum solution cost so far;average solution cost;minimum solution cost this generation; maximum solution cost this generation" << std::endl;
 
 		while (!experimentFile.eof()) {
-			this->randomAlgorithmInstanceFileRepetitions(filepath, randomCVRP, iterationResultsFile, rnd);
+			this->randomAlgorithmInstanceFileRepetitions(filepath, randomCVRP, iterationResultsFile);
 		}
 	}
 	else { // If any of the files can't be reached/the directory doesn't exist.
@@ -142,25 +142,29 @@ void environment::randomAlgorithmExperiment(filepath filepath) {
 
 // A full set of repetitions of the randomCVRP algorithm for one instance file.
 // Amount of repetitions is defined by the instanceRepeats value in the experiment file.
-void environment::randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP& randomCVRP, std::ofstream& iterationResultsFile, unsigned rnd) {
+void environment::randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP& randomCVRP, std::ofstream& iterationResultsFile) {
 	experimentFile >> instanceFileName >> instanceRepeats;
 	instanceFile.loadInstanceData(filepath.getInstancesPath(), instanceFileName);
+	randomCVRP.setInstanceFile(instanceFile); // Set file used by algorithm.
+
+	overallBestSolutionFound = INT_MAX;
 
 	averageError = 0.0;
 	averageTime = 0.0;
 	averageSolution = 0.0;
 
 	for (int i = 0; i < instanceRepeats; i++) { // Log separate results for each repeat of an instance.
+		randomCVRP.clearInfo();
 		start = read_QPC(); // Start tracking time.
-		randomCVRP.generateASolution(instanceFile, iterationResultsFile, i, rnd);
+		randomCVRP.mainAlgorithmLoop(iterationResultsFile, i);
 		elapsed = read_QPC() - start; // Stop tracking time.
 		// After the algorithm is over, save the results to a file.
-		averageError += (((double)randomCVRP.getTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
+		averageError += (((double)randomCVRP.getBestFoundSolutionTotalCost() - instanceFile.getOptimalValue()) / (double)instanceFile.getOptimalValue());
 		averageTime += (elapsed / (double)frequency);
-		averageSolution += randomCVRP.getTotalCost();
+		averageSolution += randomCVRP.getBestFoundSolutionTotalCost();
 
 		if (randomCVRP.getTotalCost() < overallBestSolutionFound) {
-			overallBestSolutionFound = randomCVRP.getTotalCost();
+			overallBestSolutionFound = randomCVRP.getBestFoundSolutionTotalCost();
 			bestFoundRoutePath = randomCVRP.getStringifiedPointOrder();
 		}
 	}

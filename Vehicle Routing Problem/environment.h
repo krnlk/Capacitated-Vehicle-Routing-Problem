@@ -34,7 +34,7 @@ class environment
 	void geneticOrRandomAlgorithmFileOpenError(filepath filepath, std::ofstream& generationResultsFile); // (Genetic & random algorithms) Print out error messages to mark files which couldn't be properly opened.
 	void geneticAlgorithmInstanceFileRepetitions(filepath filepath, geneticCVRP& geneticCVRP, std::ofstream& generationResultsFile); // A full set of repetitions of the geneticCVRP algorithm for one instance file.
 
-	void randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP& randomCVRP, std::ofstream& generationResultsFile, unsigned rnd); // A full set of repetitions of the randomCVRP algorithm for one instance file.
+	void randomAlgorithmInstanceFileRepetitions(filepath filepath, randomCVRP& randomCVRP, std::ofstream& generationResultsFile); // A full set of repetitions of the randomCVRP algorithm for one instance file.
 
 	void greedyAlgorithmFileOpenError(filepath filepath); // (Greedy algorithm) Print out error messages to mark files which couldn't be properly opened.
 	void greedyAlgorithmInstanceFileRepetitions(filepath filepath, greedyCVRP& greedyCVRP); // A full set of repetitions of the greedyCVRP algorithm for one instance file.

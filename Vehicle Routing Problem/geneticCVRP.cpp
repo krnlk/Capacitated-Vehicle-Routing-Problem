@@ -79,6 +79,7 @@ void geneticCVRP::clearInfo() {
 	allCurrentSpecimen.clear();
 	newGenerationOfSpecimen.clear();
 }
+
 // Returns true if the first specimen has a smaller total cost than the second one.
 // Used when sorting specimen.
 bool compareSpecimen(specimen firstSpecimen, specimen secondSpecimen) {
