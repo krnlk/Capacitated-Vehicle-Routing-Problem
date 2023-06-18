@@ -53,7 +53,7 @@ void randomCVRP::mainAlgorithmLoop(std::ofstream& experimentResultsFile, int ite
 	for (int i = 0; i < currentInstanceFile.dimension; i++) { // Add all points to a route.
 		pointOrder.push_back(i);
 	}
-	
+
 	for (int i = 0; i < this->maxNumberOfGenerations; i++) { // i is the number of current "generation"
 		unsigned rnd = time(NULL) * getRand(0, 9999); // Create a random formula for shuffling.
 
@@ -89,7 +89,7 @@ void randomCVRP::mainAlgorithmLoop(std::ofstream& experimentResultsFile, int ite
 		experimentResultsFile << currentInstanceFile.getFileName() << ";" << iteration << ";" << i << ";" <<
 			bestFoundSolutionTotalCost << ";" << worstFoundSolutionTotalCost << ";" <<
 			averageSolutionTotalCost / this->numberOfSpecimenPerGeneration << ";" <<
-			currentGenerationBestFoundSolutionTotalCost << ";" << currentGenerationWorstFoundSolutionTotalCost << std::endl; 
+			currentGenerationBestFoundSolutionTotalCost << ";" << currentGenerationWorstFoundSolutionTotalCost << std::endl;
 	}
 
 	currentInstanceFile.dealocateDistancesBetweenPoints();

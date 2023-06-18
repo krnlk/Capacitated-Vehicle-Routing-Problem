@@ -59,8 +59,8 @@ void instanceFile::loadInstanceDataSuccess(std::ifstream& instanceFile) {
 	std::getline(instanceFile, textLine);
 	if (textLine.find("Optimal value: ") != -1) {
 		textLine = textLine.substr(textLine.find("Optimal value: ") + 15); // Trim out beginning of the line to get to optimal value;
-		if (textLine.find(")") != -1) { 
-			textLine = textLine.erase(textLine.find(")")); 
+		if (textLine.find(")") != -1) {
+			textLine = textLine.erase(textLine.find(")"));
 		}
 		optimalValue = stoi(textLine); // Convert from string to integer.
 	}
