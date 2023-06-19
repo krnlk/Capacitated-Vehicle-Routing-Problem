@@ -633,7 +633,7 @@ void geneticCVRP::mutate() {
 
 // Mutation that swaps two random points in a specimen. Repeats multiple times.
 void geneticCVRP::mutateSwapOnSpecimen(int specimenIndex) {
-	int amountOfMutations = currentInstanceFile.dimension * 2 / 3 * (1.0 / currentInstanceFile.dimension); // How many times should mutations happen.
+	int amountOfMutations = 1; // Best results.
 
 	if (amountOfMutations == 0) { // In case of a very small instance file.
 		amountOfMutations = 1; // Make sure at least one mutation will happen.
